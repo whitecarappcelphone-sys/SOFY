@@ -98,7 +98,7 @@ async function fetchShops(){
 
 function render(){
   let q=$('search').value.toLowerCase(),list=shops.filter(s=>(s.name+s.category).toLowerCase().includes(q));
-  $('shopContent').innerHTML=!shops.length?'<div class="empty"><span class="empty-icon">'+icons.store+'</span><h3>Tu directorio comienza aqui</h3><p>Aun no hay comercios. Crea el primero y aparecera automaticamente.</p><button class="primary" data-open-create>'+icons.plus+'Crear primer comercio</button></div>':!list.length?'<p class="no-results">No encontramos comercios.</p>':'<div class="shops">'+list.map(s=>'<article class="shop"><img src="'+s.logo+'"><h3>'+esc(s.name)+'</h3><p>'+esc(s.category)+'</p></article>').join('')+'</div>';
+  $('shopContent').innerHTML=!shops.length?'<div class="empty"><span class="empty-icon">'+icons.store+'</span><h3>Tu directorio comienza aqui</h3><p>Aun no hay comercios. Crea el primero y aparecera automaticamente.</p><button class="primary" data-open-create>'+icons.plus+'Crear primer comercio</button></div>':!list.length?'<p class="no-results">No encontramos comercios.</p>':'<div class="shops">'+list.map(s=>'<a href="negocio.html?id='+s.business_id+'" target="_blank" class="shop"><img src="'+s.logo+'"><h3>'+esc(s.name)+'</h3><p>'+esc(s.category)+'</p></a>').join('')+'</div>';
   let g={};shops.forEach(s=>(g[s.category]||(g[s.category]=[])).push(s));
   let entries=Object.entries(g);
   $('categoryCount').textContent=entries.length?entries.length+' disponibles':'';
@@ -106,7 +106,16 @@ function render(){
   bind();
 }
 
-function open(id){$(id).classList.remove('hidden')}
+function bind(){
+  document.querySelectorAll('[data-open-create]').forEach(b=>b.onclick=()=>open('createModal'));
+  document.querySelectorAll('[data-category]').forEach(b=>b.onclick=()=>{
+    let c=b.dataset.category;
+    $('categoryTitle').textContent=c;
+    $('categoryShops').innerHTML=shops.filter(s=>s.category===c).map(s=>'<a href="negocio.html?id='+s.business_id+'" target="_blank" class="category-shop"><img src="'+s.logo+'"><span><strong>'+esc(s.name)+'</strong><small>'+esc(c)+'</small></span></a>').join('');
+    open('categoryModal')
+  });
+}
+  function open(id){$(id).classList.remove('hidden')}
 function close(){document.querySelectorAll('.backdrop').forEach(m=>m.classList.add('hidden'))}
 
 function bind(){
