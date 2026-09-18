@@ -585,47 +585,50 @@
         errorState.style.display = 'block';
       }
     }
+        // PROCESAR Y COMPRIMIR IMAGEN DESDE EL MÓVIL (ALTA CALIDAD)
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
 
-    // PROCESAR Y COMPRIMIR IMAGEN DESDE EL MÓVIL
-    function handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const maxSize = 600; // Aumentado de 300px a 600px para alta definición
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          // Redimensionar para optimizar peso en la base de datos
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          const maxSize = 300; 
+      let width = img.width;
+      let height = img.height;
 
-          let width = img.width;
-          let height = img.height;
+      if (width > height) {
+        if (width > maxSize) {
+          height *= maxSize / width;
+          width = maxSize;
+        }
+      } else {
+        if (height > maxSize) {
+          width *= maxSize / height;
+          height = maxSize;
+        }
+      }
 
-          if (width > height) {
-            if (width > maxSize) {
-              height *= maxSize / width;
-              width = maxSize;
-            }
-          } else {
-            if (height > maxSize) {
-              width *= maxSize / height;
-              height = maxSize;
-            }
-          }
+      canvas.width = width;
+      canvas.height = height;
 
-          canvas.width = width;
-          canvas.height = height;
-          ctx.drawImage(img, 0, 0, width, height);
+      // Activar renderizado de alta calidad
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, 0, 0, width, height);
 
-          newLogoBase64 = canvas.toDataURL('image/jpeg', 0.85);
-          document.getElementById('logoPreview').src = newLogoBase64;
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
+      // Compresión a 85% de calidad
+      newLogoBase64 = canvas.toDataURL('image/jpeg', 0.85);
+      document.getElementById('logoPreview').src = newLogoBase64;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
 
     // FUNCIONES DEL MODAL PIN
     function openPinModal() {
