@@ -20,7 +20,27 @@
       --border-color: #e2e8f0;
       --radius: 16px;
     }
+    [data-theme="dark"] {
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+}
 
+/* Modales e inputs adaptados al tema oscuro */
+[data-theme="dark"] .modal-card,
+[data-theme="dark"] .admin-drawer {
+  background-color: #1e293b;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .pin-input {
+  background-color: #0f172a;
+  color: #f8fafc;
+  border-color: #334155;
+}
     * {
       box-sizing: border-box;
       margin: 0;
@@ -465,6 +485,21 @@
       <form id="adminForm" onsubmit="event.preventDefault(); saveShopData();">
         <h4 style="margin-bottom: 14px; font-size: 1rem; color: var(--primary);">Información Básica</h4>
 
+        <h4 style="margin-top: 24px; margin-bottom: 14px; font-size: 1rem; color: var(--primary);">Personalización Visual</h4>
+
+<div class="form-group">
+  <label>Color Principal del Comercio</label>
+  <input type="color" id="editPrimaryColor" class="form-control" value="#134989" style="height: 42px; cursor: pointer; padding: 4px;">
+</div>
+
+<div class="form-group">
+  <label>Tema de la Página</label>
+  <select id="editTheme" class="form-control">
+    <option value="light">Modo Claro ☀️</option>
+    <option value="dark">Modo Oscuro 🌙</option>
+  </select>
+</div>
+        
         <div class="form-group">
           <label>Nombre del Negocio</label>
           <input type="text" id="editName" class="form-control" required>
