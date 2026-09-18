@@ -36,6 +36,7 @@
       flex-direction: column;
       align-items: center;
       padding: 20px;
+      padding-bottom: 80px;
     }
 
     .container {
@@ -179,12 +180,102 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+
+    /* ESTILOS DEL BOTÓN FLOTANTE Y MODAL PIN */
+    .btn-admin-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #0f172a;
+      color: #ffffff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      padding: 32px 24px;
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    .pin-input {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.5rem;
+      letter-spacing: 12px;
+      text-align: center;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      margin: 20px 0 12px;
+      outline: none;
+    }
+
+    .pin-input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-modal-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-close-modal {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .pin-error {
+      color: #ef4444;
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+      display: none;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <a href="index.html" class="btn-back">&#8592; Volver al directorio</a>
+    <a href="index_2.html" class="btn-back">&#8592; Volver al directorio</a>
 
     <div id="loadingState" class="state-container">
       <div class="spinner"></div>
@@ -226,16 +317,35 @@
     </div>
   </div>
 
+  <!-- BOTÓN FLOTANTE ADMINISTRAR -->
+  <button id="btnAdminFloat" class="btn-admin-float" onclick="openPinModal()">
+    ⚙ Administrar negocio
+  </button>
+
+  <!-- MODAL DE ACCESO CON PIN -->
+  <div id="pinModal" class="modal-overlay">
+    <div class="modal-card">
+      <button class="btn-close-modal" onclick="closePinModal()">&times;</button>
+      <h3 style="font-size: 1.2rem; font-weight: 700;">Acceso Propietario</h3>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Ingresa el PIN de seguridad de este negocio</p>
+      
+      <input type="password" id="pinInput" class="pin-input" maxlength="6" placeholder="••••">
+      <div id="pinError" class="pin-error">PIN incorrecto. Inténtalo de nuevo.</div>
+      
+      <button class="btn-modal-submit" onclick="verifyPin()">ENTRAR</button>
+    </div>
+  </div>
+
   <script>
-    // Credenciales integradas
     const SUPABASE_URL = 'https://jpukgeomsmwyxtqnpcsd.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwdWtnZW9tc213eXh0cW5wY3NkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMDA3MzQsImV4cCI6MjEwNDU3NjczNH0.aALmQGfEkU4YCJM_9yUGJoUYfFVSLaZe0tnOlznKm54';
     
-    // Inicialización de cliente con variable no duplicada
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const params = new URLSearchParams(window.location.search);
     const shopId = params.get('id');
+
+    let currentShopData = null;
 
     async function loadShopDetail() {
       const loadingState = document.getElementById('loadingState');
@@ -261,14 +371,17 @@
           throw new Error(error ? error.message : 'No se encontraron datos para este comercio.');
         }
 
+        currentShopData = shop;
+
         document.getElementById('shopLogo').src = shop.logo || 'https://via.placeholder.com/110';
         document.getElementById('shopName').textContent = shop.name || 'Sin nombre';
         document.getElementById('shopCategory').textContent = shop.category || 'General';
         document.getElementById('shopDescription').textContent = shop.description || 'Este comercio aún no ha agregado una descripción.';
         
-        if (shop.phone) {
-          document.getElementById('shopPhone').textContent = shop.phone;
-          document.getElementById('btnWhatsApp').href = `https://wa.me/${shop.phone.replace(/[^0-9]/g, '')}`;
+        if (shop.phone || shop.whatsapp) {
+          const num = shop.whatsapp || shop.phone;
+          document.getElementById('shopPhone').textContent = num;
+          document.getElementById('btnWhatsApp').href = `https://wa.me/${num.replace(/[^0-9]/g, '')}`;
         } else {
           document.getElementById('shopPhone').textContent = 'No disponible';
           document.getElementById('btnWhatsApp').style.display = 'none';
@@ -288,6 +401,29 @@
         loadingState.style.display = 'none';
         if (errorMessage) errorMessage.textContent = err.message || 'Error de conexión con la base de datos.';
         errorState.style.display = 'block';
+      }
+    }
+
+    // FUNCIONES DEL MODAL PIN
+    function openPinModal() {
+      document.getElementById('pinInput').value = '';
+      document.getElementById('pinError').style.display = 'none';
+      document.getElementById('pinModal').style.display = 'flex';
+    }
+
+    function closePinModal() {
+      document.getElementById('pinModal').style.display = 'none';
+    }
+
+    function verifyPin() {
+      const enteredPin = document.getElementById('pinInput').value.trim();
+      const actualPin = currentShopData ? (currentShopData.pin || '1234') : '1234';
+
+      if (enteredPin === actualPin) {
+        closePinModal();
+        alert('¡Acceso concedido! En el Paso 3 desplegaremos aquí el panel de administración.');
+      } else {
+        document.getElementById('pinError').style.display = 'block';
       }
     }
 
