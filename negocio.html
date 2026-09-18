@@ -552,9 +552,33 @@
     const shopId = params.get('id');
 
     let currentShopData = null;
-    let newLogoBase64 = null;
+  let newLogoBase64 = null;
 
-    async function loadShopDetail() {
+  // Aplica el tema oscuro/claro y el color dinámicamente en el CSS
+  function applyThemeAndColor(theme, primaryColor) {
+    if (theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+    if (primaryColor) {
+      document.documentElement.style.setProperty('--primary', primaryColor);
+      document.documentElement.style.setProperty('--primary-hover', primaryColor);
+    }
+  }
+
+  // Vista previa en tiempo real al cambiar los campos del panel
+  document.addEventListener('DOMContentLoaded', () => {
+    const colorInput = document.getElementById('editPrimaryColor');
+    const themeSelect = document.getElementById('editTheme');
+
+    if (colorInput) {
+      colorInput.addEventListener('input', (e) => applyThemeAndColor(null, e.target.value));
+    }
+    if (themeSelect) {
+      themeSelect.addEventListener('change', (e) => applyThemeAndColor(e.target.value, null));
+    }
+  });
+
+  async function loadShopDetail() {
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
       const shopDetail = document.getElementById('shopDetail');
@@ -602,14 +626,20 @@
           document.getElementById('shopAddress').textContent = 'Dirección no especificada';
         }
 
+        // Aplicar Tema y Color
+        const theme = shop.theme || 'light';
+        const primaryColor = shop.primary_color || '#134989';
+        applyThemeAndColor(theme, primaryColor);
+
         // Llenar campos del panel de edición
+        document.getElementById('editPrimaryColor').value = primaryColor;
+        document.getElementById('editTheme').value = theme;
         document.getElementById('editName').value = shop.name || '';
         document.getElementById('editDescription').value = shop.description || '';
         document.getElementById('editPhone').value = shop.whatsapp || shop.phone || '';
         document.getElementById('editAddress').value = shop.address || '';
         document.getElementById('logoPreview').src = shop.logo || 'https://via.placeholder.com/110';
         document.getElementById('editPin').value = shop.pin || '1234';
-
         loadingState.style.display = 'none';
         shopDetail.style.display = 'block';
 
@@ -709,6 +739,8 @@ async function saveShopData() {
   btnSave.textContent = 'Guardando...';
   saveStatus.style.display = 'none';
 
+  const updatedPrimaryColor = document.getElementById('editPrimaryColor').value;
+  const updatedTheme = document.getElementById('editTheme').value;
   const updatedName = document.getElementById('editName').value.trim();
   const updatedDescription = document.getElementById('editDescription').value.trim();
   const updatedPhone = document.getElementById('editPhone').value.trim();
@@ -718,8 +750,9 @@ async function saveShopData() {
   const logoToSave = newLogoBase64 || (currentShopData ? currentShopData.logo : '') || '';
 
   try {
-    // Objeto ajustado sin la columna 'phone' inexistente
     const updatePayload = {
+      primary_color: updatedPrimaryColor,
+      theme: updatedTheme,
       name: updatedName,
       description: updatedDescription,
       whatsapp: updatedPhone,
@@ -727,7 +760,6 @@ async function saveShopData() {
       logo: logoToSave,
       pin: updatedPin || '1234'
     };
-
     const { error } = await supabaseClient
       .from('shops')
       .update(updatePayload)
