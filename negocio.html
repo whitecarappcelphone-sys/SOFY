@@ -192,8 +192,8 @@
     </div>
 
     <div id="errorState" class="state-container" style="display: none;">
-      <h3 style="color: #ef4444; margin-bottom: 8px;">Comercio no encontrado</h3>
-      <p style="color: var(--text-muted);">El negocio que buscas no existe o fue eliminado.</p>
+      <h3 style="color: #ef4444; margin-bottom: 8px;">Error al cargar comercio</h3>
+      <p id="errorMessage" style="color: var(--text-muted);">El negocio que buscas no existe o fue eliminado.</p>
     </div>
 
     <div id="shopDetail" class="shop-card" style="display: none;">
@@ -227,10 +227,12 @@
   </div>
 
   <script>
-    // Asegúrate de reemplazar estas constantes con tus credenciales de Supabase
-    const SUPABASE_URL = 'https://TU_PROYECTO.supabase.co';
-    const SUPABASE_KEY = 'TU_ANON_KEY';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // Credenciales integradas
+    const SUPABASE_URL = 'https://jpukgeomsmwyxtqnpcsd.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwdWtnZW9tc213eXh0cW5wY3NkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMDA3MzQsImV4cCI6MjEwNDU3NjczNH0.aALmQGfEkU4YCJM_9yUGJoUYfFVSLaZe0tnOlznKm54';
+    
+    // Inicialización de cliente con variable no duplicada
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const params = new URLSearchParams(window.location.search);
     const shopId = params.get('id');
@@ -239,22 +241,24 @@
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
       const shopDetail = document.getElementById('shopDetail');
+      const errorMessage = document.getElementById('errorMessage');
 
       if (!shopId) {
         loadingState.style.display = 'none';
+        if (errorMessage) errorMessage.textContent = 'No se proporcionó ningún ID en la URL.';
         errorState.style.display = 'block';
         return;
       }
 
       try {
-        const { data: shop, error } = await supabase
+        const { data: shop, error } = await supabaseClient
           .from('shops')
           .select('*')
           .eq('business_id', shopId)
           .single();
 
         if (error || !shop) {
-          throw new Error('No encontrado');
+          throw new Error(error ? error.message : 'No se encontraron datos para este comercio.');
         }
 
         document.getElementById('shopLogo').src = shop.logo || 'https://via.placeholder.com/110';
@@ -280,8 +284,9 @@
         shopDetail.style.display = 'block';
 
       } catch (err) {
-        console.error(err);
+        console.error('Error al cargar comercio:', err);
         loadingState.style.display = 'none';
+        if (errorMessage) errorMessage.textContent = err.message || 'Error de conexión con la base de datos.';
         errorState.style.display = 'block';
       }
     }
