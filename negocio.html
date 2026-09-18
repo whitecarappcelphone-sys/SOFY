@@ -649,65 +649,65 @@
     }
 
     // GUARDAR DATOS EN SUPABASE
-    async function saveShopData() {
-      const btnSave = document.getElementById('btnSave');
-      const saveStatus = document.getElementById('saveStatus');
+    // GUARDAR DATOS EN SUPABASE (CORREGIDO)
+async function saveShopData() {
+  const btnSave = document.getElementById('btnSave');
+  const saveStatus = document.getElementById('saveStatus');
 
-      btnSave.disabled = true;
-      btnSave.textContent = 'Guardando...';
+  btnSave.disabled = true;
+  btnSave.textContent = 'Guardando...';
+  saveStatus.style.display = 'none';
+
+  const updatedName = document.getElementById('editName').value.trim();
+  const updatedDescription = document.getElementById('editDescription').value.trim();
+  const updatedPhone = document.getElementById('editPhone').value.trim();
+  const updatedAddress = document.getElementById('editAddress').value.trim();
+  const updatedPin = document.getElementById('editPin').value.trim();
+  
+  const logoToSave = newLogoBase64 || (currentShopData ? currentShopData.logo : '') || '';
+
+  try {
+    // Objeto ajustado sin la columna 'phone' inexistente
+    const updatePayload = {
+      name: updatedName,
+      description: updatedDescription,
+      whatsapp: updatedPhone,
+      address: updatedAddress,
+      logo: logoToSave,
+      pin: updatedPin || '1234'
+    };
+
+    const { error } = await supabaseClient
+      .from('shops')
+      .update(updatePayload)
+      .eq('business_id', shopId);
+
+    if (error) throw error;
+
+    saveStatus.style.background = '#dcfce7';
+    saveStatus.style.color = '#166534';
+    saveStatus.textContent = '¡Cambios guardados correctamente!';
+    saveStatus.style.display = 'block';
+
+    // Recargar datos en pantalla de inmediato
+    await loadShopDetail();
+
+    setTimeout(() => {
       saveStatus.style.display = 'none';
+      closeAdminDrawer();
+    }, 1500);
 
-      const updatedName = document.getElementById('editName').value.trim();
-      const updatedDescription = document.getElementById('editDescription').value.trim();
-      const updatedPhone = document.getElementById('editPhone').value.trim();
-      const updatedAddress = document.getElementById('editAddress').value.trim();
-      const updatedPin = document.getElementById('editPin').value.trim();
-      
-      const logoToSave = newLogoBase64 || currentShopData.logo || '';
-
-      try {
-        const updatePayload = {
-          name: updatedName,
-          description: updatedDescription,
-          phone: updatedPhone,
-          whatsapp: updatedPhone,
-          address: updatedAddress,
-          logo: logoToSave,
-          pin: updatedPin || '1234'
-        };
-
-        const { error } = await supabaseClient
-          .from('shops')
-          .update(updatePayload)
-          .eq('business_id', shopId);
-
-        if (error) throw error;
-
-        saveStatus.style.background = '#dcfce7';
-        saveStatus.style.color = '#166534';
-        saveStatus.textContent = '¡Cambios guardados correctamente!';
-        saveStatus.style.display = 'block';
-
-        // Recargar datos en pantalla de inmediato
-        await loadShopDetail();
-
-        setTimeout(() => {
-          saveStatus.style.display = 'none';
-          closeAdminDrawer();
-        }, 1500);
-
-      } catch (err) {
-        console.error('Error detallado al guardar:', err);
-        saveStatus.style.background = '#fee2e2';
-        saveStatus.style.color = '#991b1b';
-        saveStatus.textContent = 'Error: ' + (err.message || 'No se pudo actualizar.');
-        saveStatus.style.display = 'block';
-      } finally {
-        btnSave.disabled = false;
-        btnSave.textContent = 'Guardar Cambios';
-      }
-    }
-
+  } catch (err) {
+    console.error('Error detallado al guardar:', err);
+    saveStatus.style.background = '#fee2e2';
+    saveStatus.style.color = '#991b1b';
+    saveStatus.textContent = 'Error: ' + (err.message || 'No se pudo actualizar.');
+    saveStatus.style.display = 'block';
+  } finally {
+    btnSave.disabled = false;
+    btnSave.textContent = 'Guardar Cambios';
+  }
+}
     loadShopDetail();
   </script>
 </body>
