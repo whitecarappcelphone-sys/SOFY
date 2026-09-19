@@ -410,7 +410,12 @@
 <body>
 
   <div class="container">
-    <a href="index.html" class="btn-back">&#8592; Volver al directorio</a>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <a href="index.html" class="btn-back" style="margin-bottom: 0;">&#8592; Volver al directorio</a>
+  <button id="btnThemeToggle" onclick="toggleTheme()" style="background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+    <span id="themeIcon">🌙</span> <span id="themeText">Modo Oscuro</span>
+  </button>
+</div>
 
     <div id="loadingState" class="state-container">
       <div class="spinner"></div>
@@ -491,14 +496,6 @@
   <label>Color Principal del Comercio</label>
   <input type="color" id="editPrimaryColor" class="form-control" value="#134989" style="height: 42px; cursor: pointer; padding: 4px;">
 </div>
-
-<div class="form-group">
-  <label>Tema de la Página</label>
-  <select id="editTheme" class="form-control">
-    <option value="light">Modo Claro ☀️</option>
-    <option value="dark">Modo Oscuro 🌙</option>
-  </select>
-</div>
         
         <div class="form-group">
           <label>Nombre del Negocio</label>
@@ -555,16 +552,53 @@
   let newLogoBase64 = null;
 
   // Aplica el tema oscuro/claro y el color dinámicamente en el CSS
-  function applyThemeAndColor(theme, primaryColor) {
+function applyThemeAndColor(theme, primaryColor) {
     if (theme) {
       document.documentElement.setAttribute('data-theme', theme);
+      
+      // Actualizar texto e icono del botón superior
+      const themeIcon = document.getElementById('themeIcon');
+      const themeText = document.getElementById('themeText');
+      if (themeIcon && themeText) {
+        if (theme === 'dark') {
+          themeIcon.textContent = '☀️';
+          themeText.textContent = 'Modo Claro';
+        } else {
+          themeIcon.textContent = '🌙';
+          themeText.textContent = 'Modo Oscuro';
+        }
+      }
     }
     if (primaryColor) {
       document.documentElement.style.setProperty('--primary', primaryColor);
       document.documentElement.style.setProperty('--primary-hover', primaryColor);
     }
   }
+  async function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
+    // Aplica el cambio visualmente
+    applyThemeAndColor(newTheme, null);
+
+    // Guarda el cambio de tema en Supabase inmediatamente
+    if (currentShopData && currentShopData.id) {
+      try {
+        const { error } = await _supabase
+          .from('shops')
+          .update({ theme: newTheme })
+          .eq('id', currentShopData.id);
+
+        if (error) {
+          console.error('Error al guardar el tema:', error.message);
+        } else {
+          currentShopData.theme = newTheme;
+        }
+      } catch (err) {
+        console.error('Error inesperado al alternar el tema:', err);
+      }
+    }
+  }
   // Vista previa en tiempo real al cambiar los campos del panel
   document.addEventListener('DOMContentLoaded', () => {
     const colorInput = document.getElementById('editPrimaryColor');
@@ -740,7 +774,7 @@ async function saveShopData() {
   saveStatus.style.display = 'none';
 
   const updatedPrimaryColor = document.getElementById('editPrimaryColor').value;
-  const updatedTheme = document.getElementById('editTheme').value;
+  const updatedTheme = document.documentElement.getAttribute('data-theme') || 'light';
   const updatedName = document.getElementById('editName').value.trim();
   const updatedDescription = document.getElementById('editDescription').value.trim();
   const updatedPhone = document.getElementById('editPhone').value.trim();
