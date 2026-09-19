@@ -178,6 +178,22 @@
       font-weight: 600;
       border-radius: 12px;
       font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .btn-catalog-view {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 12px;
+      font-size: 1rem;
     }
 
     .state-container {
@@ -370,6 +386,22 @@
       margin-top: 10px;
     }
 
+    .btn-manage-page {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background-color: #059669;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-align: center;
+      text-decoration: none;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.2);
+    }
+
     .btn-save:disabled {
       background-color: var(--text-muted);
     }
@@ -445,6 +477,10 @@
         <a id="btnWhatsApp" href="#" target="_blank" class="btn-action">
           &#128172; Contactar por WhatsApp
         </a>
+
+        <a id="btnPublicCatalog" href="#" class="btn-catalog-view">
+          📖 Ver Menú / Catálogo
+        </a>
       </div>
     </div>
   </div>
@@ -479,8 +515,106 @@
     </div>
 
     <div class="drawer-body">
+      <!-- BOTÓN PARA ADMINISTRAR LA PÁGINA DEL NEGOCIO -->
+      <a id="btnManagePage" href="#" class="btn-manage-page">
+        🛍️ ADMINISTRAR PÁGINA / CATÁLOGO
+      </a>
+
       <form id="adminForm" onsubmit="event.preventDefault(); saveShopData();">
-        <h4 style="margin-bottom: 14px; font-size: 1rem; color: var(--primary);">Personalización Visual</h4>
+        <h4 style="margin-bottom: 14px; font-size: 1rem; color: var(--primary);">Tipo & Categoría de Negocio</h4>
+
+        <div class="form-group">
+          <label>Tipo de Negocio</label>
+          <select id="editCategory" class="form-control" required>
+            <option value="Restaurantes">Restaurantes</option>
+            <option value="Cafeterías">Cafeterías</option>
+            <option value="Panaderías">Panaderías</option>
+            <option value="Pastelerías">Pastelerías</option>
+            <option value="Comidas rápidas">Comidas rápidas</option>
+            <option value="Heladerías">Heladerías</option>
+            <option value="Bares">Bares</option>
+            <option value="Discotecas">Discotecas</option>
+            <option value="Gastrobares">Gastrobares</option>
+            <option value="Barberías">Barberías</option>
+            <option value="Peluquerías">Peluquerías</option>
+            <option value="Salones de belleza">Salones de belleza</option>
+            <option value="Spas">Spas</option>
+            <option value="Tiendas de ropa">Tiendas de ropa</option>
+            <option value="Zapaterías">Zapaterías</option>
+            <option value="Joyerías">Joyerías</option>
+            <option value="Perfumerías">Perfumerías</option>
+            <option value="Cosméticos">Cosméticos</option>
+            <option value="Misceláneas">Misceláneas</option>
+            <option value="Minimercados">Minimercados</option>
+            <option value="Supermercados">Supermercados</option>
+            <option value="Papelerías">Papelerías</option>
+            <option value="Librerías">Librerías</option>
+            <option value="Jugueterías">Jugueterías</option>
+            <option value="Tiendas de regalos">Tiendas de regalos</option>
+            <option value="Tiendas de recuerdos">Tiendas de recuerdos</option>
+            <option value="Floristerías">Floristerías</option>
+            <option value="Ferreterías">Ferreterías</option>
+            <option value="Tiendas de muebles">Tiendas de muebles</option>
+            <option value="Decoración para el hogar">Decoración para el hogar</option>
+            <option value="Electrodomésticos">Electrodomésticos</option>
+            <option value="Tecnología">Tecnología</option>
+            <option value="Celulares y accesorios">Celulares y accesorios</option>
+            <option value="Computadores">Computadores</option>
+            <option value="Veterinarias">Veterinarias</option>
+            <option value="Veterinarias con clínica">Veterinarias con clínica</option>
+            <option value="Veterinarias con pet shop">Veterinarias con pet shop</option>
+            <option value="Pet shops">Pet shops</option>
+            <option value="Peluquerías para mascotas">Peluquerías para mascotas</option>
+            <option value="Gimnasios">Gimnasios</option>
+            <option value="Tiendas deportivas">Tiendas deportivas</option>
+            <option value="Farmacias">Farmacias</option>
+            <option value="Ópticas">Ópticas</option>
+            <option value="Consultorios">Consultorios</option>
+            <option value="Odontologías">Odontologías</option>
+            <option value="Laboratorios">Laboratorios</option>
+            <option value="Inmobiliarias">Inmobiliarias</option>
+            <option value="Agencias de viajes">Agencias de viajes</option>
+            <option value="Hoteles">Hoteles</option>
+            <option value="Hostales">Hostales</option>
+            <option value="Lavanderías">Lavanderías</option>
+            <option value="Servicios de mensajería">Servicios de mensajería</option>
+            <option value="Talleres automotrices">Talleres automotrices</option>
+            <option value="Talleres de motos">Talleres de motos</option>
+            <option value="Lavaderos de carros">Lavaderos de carros</option>
+            <option value="Venta de repuestos">Venta de repuestos</option>
+            <option value="Parqueaderos">Parqueaderos</option>
+            <option value="Viveros">Viveros</option>
+            <option value="Tiendas de mascotas">Tiendas de mascotas</option>
+            <option value="Tiendas de productos naturales">Tiendas de productos naturales</option>
+            <option value="Tiendas gourmet">Tiendas gourmet</option>
+            <option value="Imprentas">Imprentas</option>
+            <option value="Publicidad y diseño">Publicidad y diseño</option>
+            <option value="Fotografía">Fotografía</option>
+            <option value="Academias">Academias</option>
+            <option value="Guarderías">Guarderías</option>
+            <option value="Centros de entretenimiento">Centros de entretenimiento</option>
+            <option value="Canchas deportivas">Canchas deportivas</option>
+            <option value="Salones de eventos">Salones de eventos</option>
+            <option value="Coworking">Coworking</option>
+            <option value="Oficinas de servicios">Oficinas de servicios</option>
+            <option value="Empresas de limpieza">Empresas de limpieza</option>
+            <option value="Empresas de seguridad">Empresas de seguridad</option>
+            <option value="Constructoras">Constructoras</option>
+            <option value="Materiales de construcción">Materiales de construcción</option>
+            <option value="Inversiones inmobiliarias">Inversiones inmobiliarias</option>
+            <option value="Alquiler de vehículos">Alquiler de vehículos</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Turismo">Turismo</option>
+            <option value="Servicios para empresas">Servicios para empresas</option>
+            <option value="Comercio electrónico">Comercio electrónico</option>
+            <option value="Tiendas especializadas">Tiendas especializadas</option>
+            <option value="Franquicias">Franquicias</option>
+            <option value="Negocios de venta al por mayor">Negocios de venta al por mayor</option>
+            <option value="Negocios de venta al detal">Negocios de venta al detal</option>
+          </select>
+        </div>
+
+        <h4 style="margin-top: 24px; margin-bottom: 14px; font-size: 1rem; color: var(--primary);">Personalización Visual</h4>
 
         <div class="form-group">
           <label>Color Principal del Comercio</label>
@@ -518,11 +652,11 @@
         </div>
 
         <div class="form-group">
-          <label>Logo del Negocio (Subir desde Celular / PC)</label>
+          <label>Logo del Negocio</label>
           <input type="file" id="editLogoFile" class="form-control" accept="image/*" onchange="handleImageUpload(event)">
           <div class="logo-preview-box">
             <img id="logoPreview" src="https://via.placeholder.com/110" alt="Vista previa del logo">
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Vista previa del nuevo logo</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Vista previa del logo</span>
           </div>
         </div>
 
@@ -533,7 +667,7 @@
           <input type="password" id="editPin" class="form-control" placeholder="1234" maxlength="6">
         </div>
 
-        <button type="submit" id="btnSave" class="btn-save">Guardar Cambios</button>
+        <button type="submit" id="btnSave" class="btn-save">Guardar Cambios Básicos</button>
         <div id="saveStatus" class="save-status"></div>
       </form>
     </div>
@@ -551,7 +685,6 @@
     let currentShopData = null;
     let newLogoBase64 = null;
 
-    // Aplica el tema oscuro/claro y el color dinámicamente en el CSS
     function applyThemeAndColor(theme, primaryColor) {
       if (theme) {
         document.documentElement.setAttribute('data-theme', theme);
@@ -636,10 +769,15 @@
 
         currentShopData = shop;
 
+        // Configurar enlaces al catálogo
+        const catalogUrl = `catalogo.html?id=${shopId}`;
+        document.getElementById('btnManagePage').href = catalogUrl;
+        document.getElementById('btnPublicCatalog').href = catalogUrl;
+
         // Cargar vista pública
         document.getElementById('shopLogo').src = shop.logo || 'https://via.placeholder.com/110';
         document.getElementById('shopName').textContent = shop.name || 'Sin nombre';
-        document.getElementById('shopCategory').textContent = shop.category || 'General';
+        document.getElementById('shopCategory').textContent = shop.category || 'Restaurantes';
         document.getElementById('shopDescription').textContent = shop.description || 'Este comercio aún no ha agregado una descripción.';
         
         if (shop.phone || shop.whatsapp) {
@@ -664,6 +802,7 @@
         applyThemeAndColor(theme, primaryColor);
 
         // Llenar campos del panel de edición
+        document.getElementById('editCategory').value = shop.category || 'Restaurantes';
         document.getElementById('editPrimaryColor').value = primaryColor;
         const themeElem = document.getElementById('editTheme');
         if (themeElem) themeElem.value = theme;
@@ -767,6 +906,7 @@
       btnSave.textContent = 'Guardando...';
       saveStatus.style.display = 'none';
 
+      const updatedCategory = document.getElementById('editCategory').value;
       const updatedPrimaryColor = document.getElementById('editPrimaryColor').value;
       const themeElem = document.getElementById('editTheme');
       const updatedTheme = themeElem ? themeElem.value : (document.documentElement.getAttribute('data-theme') || 'light');
@@ -780,11 +920,13 @@
 
       try {
         const updatePayload = {
+          category: updatedCategory,
           primary_color: updatedPrimaryColor,
           theme: updatedTheme,
           name: updatedName,
           description: updatedDescription,
           whatsapp: updatedPhone,
+          phone: updatedPhone,
           address: updatedAddress,
           logo: logoToSave,
           pin: updatedPin || '1234'
@@ -797,27 +939,24 @@
 
         if (error) throw error;
 
-        saveStatus.style.background = '#dcfce7';
-        saveStatus.style.color = '#166534';
-        saveStatus.textContent = '¡Cambios guardados correctamente!';
         saveStatus.style.display = 'block';
-
-        await loadShopDetail();
+        saveStatus.style.backgroundColor = '#dcfce7';
+        saveStatus.style.color = '#166534';
+        saveStatus.textContent = '¡Cambios guardados exitosamente!';
 
         setTimeout(() => {
-          saveStatus.style.display = 'none';
-          closeAdminDrawer();
-        }, 1500);
+          location.reload();
+        }, 1200);
 
       } catch (err) {
-        console.error('Error detallado al guardar:', err);
-        saveStatus.style.background = '#fee2e2';
-        saveStatus.style.color = '#991b1b';
-        saveStatus.textContent = 'Error: ' + (err.message || 'No se pudo actualizar.');
+        console.error('Error al guardar datos:', err);
         saveStatus.style.display = 'block';
+        saveStatus.style.backgroundColor = '#fee2e2';
+        saveStatus.style.color = '#991b1b';
+        saveStatus.textContent = 'Error al guardar los cambios. Intenta de nuevo.';
       } finally {
         btnSave.disabled = false;
-        btnSave.textContent = 'Guardar Cambios';
+        btnSave.textContent = 'Guardar Cambios Básicos';
       }
     }
 
