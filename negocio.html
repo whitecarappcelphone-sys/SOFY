@@ -20,27 +20,28 @@
       --border-color: #e2e8f0;
       --radius: 16px;
     }
+
     [data-theme="dark"] {
-  --bg-color: #0f172a;
-  --card-bg: #1e293b;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --border-color: #334155;
-}
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+    }
 
-/* Modales e inputs adaptados al tema oscuro */
-[data-theme="dark"] .modal-card,
-[data-theme="dark"] .admin-drawer {
-  background-color: #1e293b;
-  color: #f8fafc;
-}
+    [data-theme="dark"] .modal-card,
+    [data-theme="dark"] .admin-drawer {
+      background-color: #1e293b;
+      color: #f8fafc;
+    }
 
-[data-theme="dark"] .form-control,
-[data-theme="dark"] .pin-input {
-  background-color: #0f172a;
-  color: #f8fafc;
-  border-color: #334155;
-}
+    [data-theme="dark"] .form-control,
+    [data-theme="dark"] .pin-input {
+      background-color: #0f172a;
+      color: #f8fafc;
+      border-color: #334155;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -298,29 +299,20 @@
     }
 
     .admin-drawer {
-  position: fixed;
-  top: 0;
-  right: -450px;
-  width: 100%;
-  max-width: 450px;
-  height: 100vh;
-  height: 100dvh; /* Se adapta automáticamente al tamaño real del navegador móvil */
-  background: #ffffff;
-  box-shadow: -5px 0 25px rgba(0,0,0,0.15);
-  z-index: 1002;
-  transition: right 0.3s ease;
-  display: flex;
-  flex-direction: column;
-}
-
-.drawer-body {
-  padding: 20px;
-  padding-bottom: 120px; /* Espacio extra inferior para garantizar que el botón siempre quede visible */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* Scroll fluido en dispositivos iOS y Android */
-  overscroll-behavior: contain;
-  flex: 1;
-}
+      position: fixed;
+      top: 0;
+      right: -450px;
+      width: 100%;
+      max-width: 450px;
+      height: 100vh;
+      height: 100dvh;
+      background: #ffffff;
+      box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+      z-index: 1002;
+      transition: right 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
 
     .admin-drawer.open {
       right: 0;
@@ -336,13 +328,13 @@
     }
 
     .drawer-body {
-  padding: 20px;
-  padding-bottom: 120px; /* Espacio extra inferior para garantizar que el botón siempre quede visible */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* Scroll fluido en dispositivos iOS y Android */
-  overscroll-behavior: contain;
-  flex: 1;
-}
+      padding: 20px;
+      padding-bottom: 120px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      flex: 1;
+    }
 
     .form-group {
       margin-bottom: 16px;
@@ -411,11 +403,11 @@
 
   <div class="container">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-  <a href="index.html" class="btn-back" style="margin-bottom: 0;">&#8592; Volver al directorio</a>
-  <button id="btnThemeToggle" onclick="toggleTheme()" style="background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-    <span id="themeIcon">🌙</span> <span id="themeText">Modo Oscuro</span>
-  </button>
-</div>
+      <a href="index.html" class="btn-back" style="margin-bottom: 0;">&#8592; Volver al directorio</a>
+      <button id="btnThemeToggle" onclick="toggleTheme()" style="background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+        <span id="themeIcon">🌙</span> <span id="themeText">Modo Oscuro</span>
+      </button>
+    </div>
 
     <div id="loadingState" class="state-container">
       <div class="spinner"></div>
@@ -488,15 +480,23 @@
 
     <div class="drawer-body">
       <form id="adminForm" onsubmit="event.preventDefault(); saveShopData();">
-        <h4 style="margin-bottom: 14px; font-size: 1rem; color: var(--primary);">Información Básica</h4>
+        <h4 style="margin-bottom: 14px; font-size: 1rem; color: var(--primary);">Personalización Visual</h4>
 
-        <h4 style="margin-top: 24px; margin-bottom: 14px; font-size: 1rem; color: var(--primary);">Personalización Visual</h4>
+        <div class="form-group">
+          <label>Color Principal del Comercio</label>
+          <input type="color" id="editPrimaryColor" class="form-control" value="#134989" style="height: 42px; cursor: pointer; padding: 4px;">
+        </div>
 
-<div class="form-group">
-  <label>Color Principal del Comercio</label>
-  <input type="color" id="editPrimaryColor" class="form-control" value="#134989" style="height: 42px; cursor: pointer; padding: 4px;">
-</div>
-        
+        <div class="form-group">
+          <label>Tema del Comercio</label>
+          <select id="editTheme" class="form-control">
+            <option value="light">Modo Claro</option>
+            <option value="dark">Modo Oscuro</option>
+          </select>
+        </div>
+
+        <h4 style="margin-top: 24px; margin-bottom: 14px; font-size: 1rem; color: var(--primary);">Información Básica</h4>
+
         <div class="form-group">
           <label>Nombre del Negocio</label>
           <input type="text" id="editName" class="form-control" required>
@@ -549,70 +549,68 @@
     const shopId = params.get('id');
 
     let currentShopData = null;
-  let newLogoBase64 = null;
+    let newLogoBase64 = null;
 
-  // Aplica el tema oscuro/claro y el color dinámicamente en el CSS
-function applyThemeAndColor(theme, primaryColor) {
-    if (theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      
-      // Actualizar texto e icono del botón superior
-      const themeIcon = document.getElementById('themeIcon');
-      const themeText = document.getElementById('themeText');
-      if (themeIcon && themeText) {
-        if (theme === 'dark') {
-          themeIcon.textContent = '☀️';
-          themeText.textContent = 'Modo Claro';
-        } else {
-          themeIcon.textContent = '🌙';
-          themeText.textContent = 'Modo Oscuro';
+    // Aplica el tema oscuro/claro y el color dinámicamente en el CSS
+    function applyThemeAndColor(theme, primaryColor) {
+      if (theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        if (themeIcon && themeText) {
+          if (theme === 'dark') {
+            themeIcon.textContent = '☀️';
+            themeText.textContent = 'Modo Claro';
+          } else {
+            themeIcon.textContent = '🌙';
+            themeText.textContent = 'Modo Oscuro';
+          }
+        }
+      }
+      if (primaryColor) {
+        document.documentElement.style.setProperty('--primary', primaryColor);
+        document.documentElement.style.setProperty('--primary-hover', primaryColor);
+      }
+    }
+
+    async function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+      applyThemeAndColor(newTheme, null);
+
+      if (currentShopData && currentShopData.id) {
+        try {
+          const { error } = await supabaseClient
+            .from('shops')
+            .update({ theme: newTheme })
+            .eq('id', currentShopData.id);
+
+          if (error) {
+            console.error('Error al guardar el tema:', error.message);
+          } else {
+            currentShopData.theme = newTheme;
+          }
+        } catch (err) {
+          console.error('Error inesperado al alternar el tema:', err);
         }
       }
     }
-    if (primaryColor) {
-      document.documentElement.style.setProperty('--primary', primaryColor);
-      document.documentElement.style.setProperty('--primary-hover', primaryColor);
-    }
-  }
-  async function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-    // Aplica el cambio visualmente
-    applyThemeAndColor(newTheme, null);
+    document.addEventListener('DOMContentLoaded', () => {
+      const colorInput = document.getElementById('editPrimaryColor');
+      const themeSelect = document.getElementById('editTheme');
 
-    // Guarda el cambio de tema en Supabase inmediatamente
-    if (currentShopData && currentShopData.id) {
-      try {
-        const { error } = await _supabase
-          .from('shops')
-          .update({ theme: newTheme })
-          .eq('id', currentShopData.id);
-
-        if (error) {
-          console.error('Error al guardar el tema:', error.message);
-        } else {
-          currentShopData.theme = newTheme;
-        }
-      } catch (err) {
-        console.error('Error inesperado al alternar el tema:', err);
+      if (colorInput) {
+        colorInput.addEventListener('input', (e) => applyThemeAndColor(null, e.target.value));
       }
-    }
-  }
-  // Vista previa en tiempo real al cambiar los campos del panel
-  document.addEventListener('DOMContentLoaded', () => {
-    const colorInput = document.getElementById('editPrimaryColor');
-    const themeSelect = document.getElementById('editTheme');
+      if (themeSelect) {
+        themeSelect.addEventListener('change', (e) => applyThemeAndColor(e.target.value, null));
+      }
+    });
 
-    if (colorInput) {
-      colorInput.addEventListener('input', (e) => applyThemeAndColor(null, e.target.value));
-    }
-    if (themeSelect) {
-      themeSelect.addEventListener('change', (e) => applyThemeAndColor(e.target.value, null));
-    }
-  });
-
-  async function loadShopDetail() {
+    async function loadShopDetail() {
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
       const shopDetail = document.getElementById('shopDetail');
@@ -667,13 +665,15 @@ function applyThemeAndColor(theme, primaryColor) {
 
         // Llenar campos del panel de edición
         document.getElementById('editPrimaryColor').value = primaryColor;
-        document.getElementById('editTheme').value = theme;
+        const themeElem = document.getElementById('editTheme');
+        if (themeElem) themeElem.value = theme;
         document.getElementById('editName').value = shop.name || '';
         document.getElementById('editDescription').value = shop.description || '';
         document.getElementById('editPhone').value = shop.whatsapp || shop.phone || '';
         document.getElementById('editAddress').value = shop.address || '';
         document.getElementById('logoPreview').src = shop.logo || 'https://via.placeholder.com/110';
         document.getElementById('editPin').value = shop.pin || '1234';
+
         loadingState.style.display = 'none';
         shopDetail.style.display = 'block';
 
@@ -684,52 +684,49 @@ function applyThemeAndColor(theme, primaryColor) {
         errorState.style.display = 'block';
       }
     }
-        // PROCESAR Y COMPRIMIR IMAGEN DESDE EL MÓVIL (ALTA CALIDAD)
-function handleImageUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const img = new Image();
-    img.onload = function() {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const maxSize = 600; // Aumentado de 300px a 600px para alta definición
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
 
-      let width = img.width;
-      let height = img.height;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const maxSize = 600;
 
-      if (width > height) {
-        if (width > maxSize) {
-          height *= maxSize / width;
-          width = maxSize;
-        }
-      } else {
-        if (height > maxSize) {
-          width *= maxSize / height;
-          height = maxSize;
-        }
-      }
+          let width = img.width;
+          let height = img.height;
 
-      canvas.width = width;
-      canvas.height = height;
+          if (width > height) {
+            if (width > maxSize) {
+              height *= maxSize / width;
+              width = maxSize;
+            }
+          } else {
+            if (height > maxSize) {
+              width *= maxSize / height;
+              height = maxSize;
+            }
+          }
 
-      // Activar renderizado de alta calidad
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(img, 0, 0, width, height);
+          canvas.width = width;
+          canvas.height = height;
 
-      // Compresión a 85% de calidad
-      newLogoBase64 = canvas.toDataURL('image/jpeg', 0.85);
-      document.getElementById('logoPreview').src = newLogoBase64;
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, 0, 0, width, height);
 
-    // FUNCIONES DEL MODAL PIN
+          newLogoBase64 = canvas.toDataURL('image/jpeg', 0.85);
+          document.getElementById('logoPreview').src = newLogoBase64;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
     function openPinModal() {
       document.getElementById('pinInput').value = '';
       document.getElementById('pinError').style.display = 'none';
@@ -752,7 +749,6 @@ function handleImageUpload(event) {
       }
     }
 
-    // FUNCIONES DEL PANEL LATERAL
     function openAdminDrawer() {
       document.getElementById('drawerOverlay').style.display = 'block';
       document.getElementById('adminDrawer').classList.add('open');
@@ -763,68 +759,68 @@ function handleImageUpload(event) {
       document.getElementById('adminDrawer').classList.remove('open');
     }
 
-    // GUARDAR DATOS EN SUPABASE
-    // GUARDAR DATOS EN SUPABASE (CORREGIDO)
-async function saveShopData() {
-  const btnSave = document.getElementById('btnSave');
-  const saveStatus = document.getElementById('saveStatus');
+    async function saveShopData() {
+      const btnSave = document.getElementById('btnSave');
+      const saveStatus = document.getElementById('saveStatus');
 
-  btnSave.disabled = true;
-  btnSave.textContent = 'Guardando...';
-  saveStatus.style.display = 'none';
-
-  const updatedPrimaryColor = document.getElementById('editPrimaryColor').value;
-  const updatedTheme = document.documentElement.getAttribute('data-theme') || 'light';
-  const updatedName = document.getElementById('editName').value.trim();
-  const updatedDescription = document.getElementById('editDescription').value.trim();
-  const updatedPhone = document.getElementById('editPhone').value.trim();
-  const updatedAddress = document.getElementById('editAddress').value.trim();
-  const updatedPin = document.getElementById('editPin').value.trim();
-  
-  const logoToSave = newLogoBase64 || (currentShopData ? currentShopData.logo : '') || '';
-
-  try {
-    const updatePayload = {
-      primary_color: updatedPrimaryColor,
-      theme: updatedTheme,
-      name: updatedName,
-      description: updatedDescription,
-      whatsapp: updatedPhone,
-      address: updatedAddress,
-      logo: logoToSave,
-      pin: updatedPin || '1234'
-    };
-    const { error } = await supabaseClient
-      .from('shops')
-      .update(updatePayload)
-      .eq('business_id', shopId);
-
-    if (error) throw error;
-
-    saveStatus.style.background = '#dcfce7';
-    saveStatus.style.color = '#166534';
-    saveStatus.textContent = '¡Cambios guardados correctamente!';
-    saveStatus.style.display = 'block';
-
-    // Recargar datos en pantalla de inmediato
-    await loadShopDetail();
-
-    setTimeout(() => {
+      btnSave.disabled = true;
+      btnSave.textContent = 'Guardando...';
       saveStatus.style.display = 'none';
-      closeAdminDrawer();
-    }, 1500);
 
-  } catch (err) {
-    console.error('Error detallado al guardar:', err);
-    saveStatus.style.background = '#fee2e2';
-    saveStatus.style.color = '#991b1b';
-    saveStatus.textContent = 'Error: ' + (err.message || 'No se pudo actualizar.');
-    saveStatus.style.display = 'block';
-  } finally {
-    btnSave.disabled = false;
-    btnSave.textContent = 'Guardar Cambios';
-  }
-}
+      const updatedPrimaryColor = document.getElementById('editPrimaryColor').value;
+      const themeElem = document.getElementById('editTheme');
+      const updatedTheme = themeElem ? themeElem.value : (document.documentElement.getAttribute('data-theme') || 'light');
+      const updatedName = document.getElementById('editName').value.trim();
+      const updatedDescription = document.getElementById('editDescription').value.trim();
+      const updatedPhone = document.getElementById('editPhone').value.trim();
+      const updatedAddress = document.getElementById('editAddress').value.trim();
+      const updatedPin = document.getElementById('editPin').value.trim();
+      
+      const logoToSave = newLogoBase64 || (currentShopData ? currentShopData.logo : '') || '';
+
+      try {
+        const updatePayload = {
+          primary_color: updatedPrimaryColor,
+          theme: updatedTheme,
+          name: updatedName,
+          description: updatedDescription,
+          whatsapp: updatedPhone,
+          address: updatedAddress,
+          logo: logoToSave,
+          pin: updatedPin || '1234'
+        };
+
+        const { error } = await supabaseClient
+          .from('shops')
+          .update(updatePayload)
+          .eq('business_id', shopId);
+
+        if (error) throw error;
+
+        saveStatus.style.background = '#dcfce7';
+        saveStatus.style.color = '#166534';
+        saveStatus.textContent = '¡Cambios guardados correctamente!';
+        saveStatus.style.display = 'block';
+
+        await loadShopDetail();
+
+        setTimeout(() => {
+          saveStatus.style.display = 'none';
+          closeAdminDrawer();
+        }, 1500);
+
+      } catch (err) {
+        console.error('Error detallado al guardar:', err);
+        saveStatus.style.background = '#fee2e2';
+        saveStatus.style.color = '#991b1b';
+        saveStatus.textContent = 'Error: ' + (err.message || 'No se pudo actualizar.');
+        saveStatus.style.display = 'block';
+      } finally {
+        btnSave.disabled = false;
+        btnSave.textContent = 'Guardar Cambios';
+      }
+    }
+
     loadShopDetail();
   </script>
 </body>
