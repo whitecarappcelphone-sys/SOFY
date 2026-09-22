@@ -919,18 +919,17 @@
       const logoToSave = newLogoBase64 || (currentShopData ? currentShopData.logo : '') || '';
 
       try {
-        const updatePayload = {
-          category: updatedCategory,
-          primary_color: updatedPrimaryColor,
-          theme: updatedTheme,
-          name: updatedName,
-          description: updatedDescription,
-          whatsapp: updatedPhone,
-          phone: updatedPhone,
-          address: updatedAddress,
-          logo: logoToSave,
-          pin: updatedPin || '1234'
-        };
+const updatePayload = {
+  category: updatedCategory,
+  primary_color: updatedPrimaryColor,
+  theme: updatedTheme,
+  name: updatedName,
+  description: updatedDescription,
+  whatsapp: updatedPhone,
+  address: updatedAddress,
+  logo: logoToSave,
+  pin: updatedPin || '1234'
+};
 
         const { error } = await supabaseClient
           .from('shops')
