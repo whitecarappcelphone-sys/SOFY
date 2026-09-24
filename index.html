@@ -358,7 +358,7 @@ async function fetchBannerVideos() {
   data.forEach((item, index) => {
     const slide = document.createElement('a');
     slide.className = 'slide' + (index === 0 ? ' active' : '');
-    slide.innerHTML = `<video src="${item.video_url}" muted playsinline></video>`;
+    slide.innerHTML = `<video src="${item.video_url}" autoplay loop muted playsinline webkit-playsinline preload="auto"></video>`;
     slidesContainer.insertBefore(slide, shade);
   });
 
