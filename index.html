@@ -342,10 +342,11 @@ theme(localStorage.getItem('madelena-theme')||'dark');
 $('themeBtn').onclick=()=>theme(document.documentElement.dataset.theme==='dark'?'light':'dark');
 
 async function fetchBannerVideos() {
-  // Ahora consultamos la tabla 'shop_banners' utilizada por el panel administrativo
+  // Añadimos .is('business_id', null) para traer SOLO los banners globales/generales
   const { data, error } = await _supabase
     .from('shop_banners')
     .select('*')
+    .is('business_id', null) 
     .order('order_index', { ascending: true });
 
   if (error || !data || !data.length) return;
