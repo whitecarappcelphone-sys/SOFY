@@ -38,7 +38,7 @@
 }
 .hero h1{
   max-width:680px;
-  margin:0;
+  margin:14px 0 34px; /* Separa el título: queda debajo de "Descubre lo que tienes cerca" sin taparlo y deja espacio al texto de abajo */
   font-size:clamp(24px,3.5vw,36px); /* Reducido de clamp(32px,5vw,52px) */
   line-height:.98;
   letter-spacing:-.055em;
@@ -109,9 +109,11 @@ form label.logo-field{height:100%}
 .shops-nav{display:flex;gap:6px}
 .shops-nav button{width:32px;height:32px;display:grid;place-items:center;padding:0 0 2px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer;font-size:20px;line-height:1;transition:.2s}
 .shops-nav button:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
-.shops{display:flex;gap:18px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;padding:8px 2px 4px}
-.shops::-webkit-scrollbar{display:none}
-.shops .shop{flex:0 0 calc((100% - 36px)/3);scroll-snap-align:start}
+.shops-panel.grid-panel{max-width:580px}
+.shops{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;padding:8px 2px 4px;touch-action:pan-y}
+.shops .shop:nth-child(n+5){display:none}
+.shops.ready .shop{animation:none}
+.shops.ready .shop.enter{animation:up .6s ease}
 .shops .shop img{border-radius:20px}
 .shops .shop h3{margin:12px 0 3px;font-size:16px}
 .shops .shop p{font-size:12px}
@@ -149,8 +151,7 @@ a.category-shop:hover{background:var(--soft);padding-left:8px}
   .shops-progress{left:12px;right:12px;bottom:8px}
   .shops-nav{display:none}
   .swipe-hint{font-size:11px;padding:5px 10px}
-  .shops{gap:10px}
-  .shops .shop{flex:0 0 calc((100% - 20px)/3)}
+  .shops{gap:12px}
   .shops .shop img{border-radius:15px}
   .shops .shop h3{font-size:13px;margin-top:9px}
   .shops .shop p{font-size:11px}
@@ -533,9 +534,9 @@ async function fetchShops(){
 
 function render(){
   let q=$('search').value.toLowerCase(),list=shops.filter(s=>(s.name+s.category).toLowerCase().includes(q));
-  let more=list.length>3;
+  let more=list.length>4;
   $('shopContent').innerHTML=!shops.length?'<div class="empty"><span class="empty-icon">'+icons.store+'</span><h3>Tu directorio comienza aqui</h3><p>Aun no hay comercios. Crea el primero y aparecera automaticamente.</p><button class="primary" data-open-create>'+icons.plus+'Crear primer comercio</button></div>':!list.length?'<p class="no-results">No encontramos comercios.</p>':
-    '<div class="shops-panel"><div class="shops-head"><span class="shops-total"><span class="live-dot"></span><b>'+list.length+'</b> '+(list.length===1?'comercio':'comercios')+'</span>'+
+    '<div class="shops-panel grid-panel"><div class="shops-head"><span class="shops-total"><span class="live-dot"></span><b>'+list.length+'</b> '+(list.length===1?'comercio':'comercios')+'</span>'+
     (more?'<div class="shops-tools"><span class="swipe-hint"><span class="swipe-track"></span>Desliza para ver más<span class="swipe-arrows"><i>&#8250;</i><i>&#8250;</i><i>&#8250;</i></span></span><div class="shops-nav"><button type="button" data-shops-prev aria-label="Anterior">&#8249;</button><button type="button" data-shops-next aria-label="Siguiente">&#8250;</button></div></div>':'')+
     '</div><div class="shops" id="shopsTrack">'+list.map(s=>'<a href="negocio.html?id='+s.business_id+'" target="_blank" class="shop"><img src="'+s.logo+'"><h3>'+esc(s.name)+'</h3><p>'+esc(s.category)+'</p></a>').join('')+'</div>'+
     (list.length>1?'<div class="shops-progress"><i></i></div>':'')+'</div>';
@@ -565,13 +566,43 @@ let shopsPausedUntil=0;
 function bindShopsSlider(){
   const t=$('shopsTrack');
   if(!t)return;
+  setTimeout(()=>t.classList.add('ready'),650);
   const pause=()=>{shopsPausedUntil=Date.now()+6000};
-  t.addEventListener('pointerdown',pause,{passive:true});
-  t.addEventListener('touchstart',pause,{passive:true});
-  t.addEventListener('wheel',pause,{passive:true});
   const prev=document.querySelector('[data-shops-prev]'),next=document.querySelector('[data-shops-next]');
-  if(prev)prev.onclick=()=>{pause();t.scrollBy({left:-t.clientWidth,behavior:'smooth'})};
-  if(next)next.onclick=()=>{pause();t.scrollBy({left:t.clientWidth,behavior:'smooth'})};
+  if(prev)prev.onclick=()=>{pause();rotateShops(t,-1);restartShopsProgress()};
+  if(next)next.onclick=()=>{pause();rotateShops(t,1);restartShopsProgress()};
+  // Deslizar con el dedo para ver más comercios
+  let sx=null,sy=null;
+  t.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+  t.addEventListener('touchend',e=>{
+    if(sx===null)return;
+    const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+    sx=sy=null;
+    if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){pause();rotateShops(t,dx<0?1:-1);restartShopsProgress()}
+  },{passive:true});
+}
+
+// Cuadrícula 2x2: rota las posiciones entre TODOS los comercios (visibles y ocultos)
+function rotateShops(t,dir){
+  const items=[...t.children];
+  if(items.length<2)return;
+  const first=items.map(el=>el.getBoundingClientRect());
+  if(dir<0)t.insertBefore(items[items.length-1],items[0]);else t.appendChild(items[0]);
+  items.forEach((el,i)=>{
+    const last=el.getBoundingClientRect();
+    el.classList.remove('enter');
+    el.style.transition='none';
+    el.style.transform='';
+    if(!last.width)return;
+    if(!first[i].width){el.offsetWidth;el.classList.add('enter');return}
+    el.style.transform='translate('+(first[i].left-last.left)+'px,'+(first[i].top-last.top)+'px)';
+  });
+  t.offsetWidth;
+  items.forEach(el=>{
+    el.style.transition='transform .75s cubic-bezier(.2,.8,.2,1)';
+    el.style.transform='';
+  });
+  setTimeout(()=>items.forEach(el=>{el.style.transition=''}),800);
 }
 function restartShopsProgress(){
   const bar=document.querySelector('.shops-progress i');
@@ -610,7 +641,7 @@ setInterval(()=>{
   const t=$('shopsTrack');
   if(!t)return;
   if(Date.now()<shopsPausedUntil){restartShopsProgress();return}
-  flipRotate(t);
+  rotateShops(t,1);
   restartShopsProgress();
 },4000);
 
