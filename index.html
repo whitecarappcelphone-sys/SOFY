@@ -632,19 +632,19 @@ const _supabase = createClient(supabaseUrl, supabaseKey);
 let currentUserProfile = null;
 let regAvatarFile = null;
 
-function switchAuthTab(type) {
+window.switchAuthTab = function(type) {
   $('tabLoginBtn').classList.toggle('active', type === 'login');
   $('tabRegisterBtn').classList.toggle('active', type === 'register');
   $('loginForm').classList.toggle('hidden', type !== 'login');
   $('registerForm').classList.toggle('hidden', type !== 'register');
-}
+};
 
-function selectRole(role) {
+window.selectRole = function(role) {
   $('roleCompradorLbl').classList.toggle('selected', role === 'comprador');
   $('roleVendedorLbl').classList.toggle('selected', role === 'vendedor');
-}
+};
 
-function previewAuthAvatar(e) {
+window.previewAuthAvatar = function(e) {
   const file = e.target.files[0];
   if (file) {
     regAvatarFile = file;
@@ -652,7 +652,7 @@ function previewAuthAvatar(e) {
     reader.onload = (evt) => $('regAvatarPreview').src = evt.target.result;
     reader.readAsDataURL(file);
   }
-}
+};
 
 async function checkAuthSession() {
   const { data: { session } } = await _supabase.auth.getSession();
