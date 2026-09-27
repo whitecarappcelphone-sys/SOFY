@@ -285,6 +285,114 @@ a.category-shop:hover{background:var(--soft);padding-left:8px}
 .pwa-close:hover {
   color: var(--text, #ffffff);
 }  
+/* ==========================================
+   ESTILOS DE AUTENTICACIÓN Y PERFIL DE USUARIO
+   ========================================== */
+.user-profile-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 4px 10px 4px 4px;
+  border-radius: 30px;
+}
+.user-profile-badge img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--accent);
+}
+.user-profile-badge span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  max-width: 90px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-profile-badge .role-tag {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: var(--soft);
+  color: var(--accent);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.btn-logout {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+.btn-logout:hover { color: #ff5e76; }
+
+/* Modal Auth Bloqueante */
+#authModal {
+  z-index: 1000;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.auth-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+}
+.auth-tab-btn {
+  flex: 1;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.auth-tab-btn.active {
+  background: var(--soft);
+  color: var(--accent);
+}
+.role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 4px;
+}
+.role-option {
+  border: 1px solid var(--line);
+  background: var(--soft);
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: .2s;
+}
+.role-option input { display: none; }
+.role-option.selected {
+  border-color: var(--accent);
+  background: rgba(41, 182, 246, 0.15);
+  color: var(--accent);
+}
+.avatar-upload-preview {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 8px auto;
+  display: block;
+  border: 2px dashed var(--accent);
+}  
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head><body>
@@ -312,7 +420,16 @@ a.category-shop:hover{background:var(--soft);padding-left:8px}
   </div>
 </div>  
 <main class="app">
-<header class="topbar"><a class="brand" href="#inicio"><img id="brandLogo" src="https://i.imgur.com/HuC4TzS.gif" alt="Madelena"><span class="brand-copy"><small>Tu barrio, mas cerca</small></span></a><div class="actions"><button class="theme" id="themeBtn" aria-label="Cambiar tema"><span id="sun" data-icon="sun"></span><span id="moon" data-icon="moon"></span></button><button class="primary create-top" data-open-create><span data-icon="plus"></span>Crear comercio</button><button class="primary settings-top" id="settingsBtn" type="button" aria-label="Soporte y configuración" title="Soporte y configuración"><span data-icon="gear"></span></button></div></header>
+<header class="topbar"><a class="brand" href="#inicio"><img id="brandLogo" src="https://i.imgur.com/HuC4TzS.gif" alt="Madelena"><span class="brand-copy"><small>Tu barrio, mas cerca</small></span></a><div class="actions"><div id="userProfileBadge" class="user-profile-badge hidden">
+  <img id="userAvatarImg" src="" alt="Avatar">
+  <div style="display:flex; flex-direction:column;">
+    <span id="userNameTxt">Usuario</span>
+    <small id="userRoleTxt" class="role-tag">COMPRADOR</small>
+  </div>
+  <button id="btnLogout" class="btn-logout" title="Cerrar sesión">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+  </button>
+</div><button class="theme" id="themeBtn" aria-label="Cambiar tema"><span id="sun" data-icon="sun"></span><span id="moon" data-icon="moon"></span></button><button class="primary create-top" data-open-create><span data-icon="plus"></span>Crear comercio</button><button class="primary settings-top" id="settingsBtn" type="button" aria-label="Soporte y configuración" title="Soporte y configuración"><span data-icon="gear"></span></button></div></header>
 <section class="hero" id="inicio">
   <div class="slides" id="slidesContainer">
     <div class="shade"></div>
@@ -436,6 +553,70 @@ Solicita tu PIN para gestionar tu página, subir tus productos y servicios, y co
 <div class="backdrop hidden" id="categoryModal"><section class="modal small"><button class="close" data-close><span data-icon="close"></span></button><p class="eyebrow">Categoria</p><h2 id="categoryTitle"></h2><div class="category-shops" id="categoryShops"></div></section></div>
 <div class="backdrop hidden" id="supportModal"><section class="modal support"><div class="support-head"><span class="support-icon" data-icon="gear"></span><div><p class="eyebrow">Centro de ayuda</p><h3>Soporte Sofy</h3></div><button class="close" data-close><span data-icon="close"></span></button></div><div class="support-body"><div class="support-loader" id="supportLoader"><span></span>Cargando soporte...</div><iframe id="supportFrame" title="Soporte Sofy" allow="clipboard-write; fullscreen"></iframe></div></section></div>
 <div class="toast hidden" id="toast"></div>
+<!-- MODAL DE INICIO DE SESIÓN / REGISTRO OBLIGATORIO -->
+<div class="backdrop" id="authModal">
+  <section class="modal small" style="pointer-events: auto;">
+    <div class="auth-tabs">
+      <button class="auth-tab-btn active" id="tabLoginBtn" type="button" onclick="switchAuthTab('login')">Iniciar Sesión</button>
+      <button class="auth-tab-btn" id="tabRegisterBtn" type="button" onclick="switchAuthTab('register')">Registrarse</button>
+    </div>
+
+    <!-- FORMULARIO LOGIN -->
+    <form id="loginForm">
+      <p class="eyebrow">Bienvenido a Sofy</p>
+      <h2 style="margin-bottom: 12px;">Ingresa a tu cuenta</h2>
+      <label>Correo Electrónico
+        <input type="email" id="loginEmail" required placeholder="tu@email.com">
+      </label>
+      <label>Contraseña
+        <input type="password" id="loginPassword" required placeholder="••••••••">
+      </label>
+      <p class="error hidden" id="loginError"></p>
+      <button class="primary submit" type="submit" id="loginSubmitBtn">Ingresar</button>
+    </form>
+
+    <!-- FORMULARIO REGISTRO -->
+    <form id="registerForm" class="hidden">
+      <p class="eyebrow">Únete a Sofy</p>
+      <h2 style="margin-bottom: 10px;">Crea tu cuenta</h2>
+
+      <label>Nombre Completo
+        <input type="text" id="regFullName" required placeholder="Ej. Maria Pérez">
+      </label>
+
+      <label>Selecciona tu Rol
+        <div class="role-selector">
+          <label class="role-option selected" id="roleCompradorLbl">
+            <input type="radio" name="userRole" value="comprador" checked onchange="selectRole('comprador')">
+            🛍️ Comprador
+          </label>
+          <label class="role-option" id="roleVendedorLbl">
+            <input type="radio" name="userRole" value="vendedor" onchange="selectRole('vendedor')">
+            🏪 Vendedor
+          </label>
+        </div>
+      </label>
+
+      <label>Foto de Perfil
+        <input type="file" id="regAvatarInput" accept="image/*" class="file" onchange="previewAuthAvatar(event)">
+        <button class="upload" type="button" onclick="document.getElementById('regAvatarInput').click()">
+          <img id="regAvatarPreview" src="https://via.placeholder.com/70?text=Foto" class="avatar-upload-preview" alt="Foto">
+          <small style="text-align:center; display:block;">Haz clic para elegir foto</small>
+        </button>
+      </label>
+
+      <label>Correo Electrónico
+        <input type="email" id="regEmail" required placeholder="tu@email.com">
+      </label>
+      <label>Contraseña
+        <input type="password" id="regPassword" required minlength="6" placeholder="Mínimo 6 caracteres">
+      </label>
+
+      <p class="error hidden" id="regError"></p>
+      <button class="primary submit" type="submit" id="regSubmitBtn">Crear Cuenta</button>
+    </form>
+  </section>
+</div>
 <script>
 const icons={store:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10v10h16V10M3 4h18l-2 6H5L3 4Z"/><path d="M9 20v-6h6v6"/></svg>',sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>',moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.5 14.1A8.4 8.4 0 019.9 3.5 8.5 8.5 0 1020.5 14.1Z"/></svg>',plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>',search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',upload:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4M7 9l5-5 5 5M5 15v4h14v-4"/></svg>',close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg>',gear:'<svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>'};
 document.querySelectorAll('[data-icon]').forEach(e=>e.innerHTML=icons[e.dataset.icon]||'');
@@ -446,6 +627,160 @@ const { createClient } = supabase;
 const supabaseUrl = 'https://jpukgeomsmwyxtqnpcsd.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwdWtnZW9tc213eXh0cW5wY3NkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMDA3MzQsImV4cCI6MjEwNDU3NjczNH0.aALmQGfEkU4YCJM_9yUGJoUYfFVSLaZe0tnOlznKm54';
 const _supabase = createClient(supabaseUrl, supabaseKey);
+/* ==========================================
+   AUTENTICACIÓN, ROLES Y PERFIL DE USUARIO
+   ========================================== */
+let currentUserProfile = null;
+let regAvatarFile = null;
+
+function switchAuthTab(type) {
+  $('tabLoginBtn').classList.toggle('active', type === 'login');
+  $('tabRegisterBtn').classList.toggle('active', type === 'register');
+  $('loginForm').classList.toggle('hidden', type !== 'login');
+  $('registerForm').classList.toggle('hidden', type !== 'register');
+}
+
+function selectRole(role) {
+  $('roleCompradorLbl').classList.toggle('selected', role === 'comprador');
+  $('roleVendedorLbl').classList.toggle('selected', role === 'vendedor');
+}
+
+function previewAuthAvatar(e) {
+  const file = e.target.files[0];
+  if (file) {
+    regAvatarFile = file;
+    const reader = new FileReader();
+    reader.onload = (evt) => $('regAvatarPreview').src = evt.target.result;
+    reader.readAsDataURL(file);
+  }
+}
+
+async function checkAuthSession() {
+  const { data: { session } } = await _supabase.auth.getSession();
+  if (!session) {
+    $('authModal').classList.remove('hidden');
+  } else {
+    await loadUserProfile(session.user.id);
+  }
+}
+
+async function loadUserProfile(userId) {
+  const { data, error } = await _supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single();
+
+  if (error || !data) {
+    await _supabase.auth.signOut();
+    $('authModal').classList.remove('hidden');
+    return;
+  }
+
+  currentUserProfile = data;
+  $('authModal').classList.add('hidden');
+
+  $('userAvatarImg').src = data.avatar_url || 'https://via.placeholder.com/32';
+  $('userNameTxt').textContent = data.full_name.split(' ')[0];
+  $('userRoleTxt').textContent = data.role.toUpperCase();
+  $('userProfileBadge').classList.remove('hidden');
+
+  if (data.role === 'comprador') {
+    document.querySelectorAll('[data-open-create]').forEach(btn => {
+      btn.onclick = () => alert('Tu cuenta es de tipo COMPRADOR. Para registrar comercios debes crear o ingresar con una cuenta de VENDEDOR.');
+    });
+  }
+}
+
+$('loginForm').onsubmit = async (e) => {
+  e.preventDefault();
+  $('loginError').classList.add('hidden');
+  $('loginSubmitBtn').disabled = true;
+  $('loginSubmitBtn').textContent = 'Ingresando...';
+
+  const email = $('loginEmail').value.trim();
+  const password = $('loginPassword').value;
+
+  const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    $('loginError').textContent = 'Correo o contraseña incorrectos.';
+    $('loginError').classList.remove('hidden');
+    $('loginSubmitBtn').disabled = false;
+    $('loginSubmitBtn').textContent = 'Ingresar';
+  } else {
+    await loadUserProfile(data.user.id);
+    $('loginSubmitBtn').disabled = false;
+    $('loginSubmitBtn').textContent = 'Ingresar';
+  }
+};
+
+$('registerForm').onsubmit = async (e) => {
+  e.preventDefault();
+  $('regError').classList.add('hidden');
+  $('regSubmitBtn').disabled = true;
+  $('regSubmitBtn').textContent = 'Creando cuenta...';
+
+  const fullName = $('regFullName').value.trim();
+  const role = document.querySelector('input[name="userRole"]:checked').value;
+  const email = $('regEmail').value.trim();
+  const password = $('regPassword').value;
+
+  if (!regAvatarFile) {
+    $('regError').textContent = 'Por favor selecciona una foto de perfil.';
+    $('regError').classList.remove('hidden');
+    $('regSubmitBtn').disabled = false;
+    $('regSubmitBtn').textContent = 'Crear Cuenta';
+    return;
+  }
+
+  const { data: authData, error: authError } = await _supabase.auth.signUp({ email, password });
+
+  if (authError || !authData.user) {
+    $('regError').textContent = authError ? authError.message : 'Error al registrar usuario.';
+    $('regError').classList.remove('hidden');
+    $('regSubmitBtn').disabled = false;
+    $('regSubmitBtn').textContent = 'Crear Cuenta';
+    return;
+  }
+
+  const userId = authData.user.id;
+  const fileExt = regAvatarFile.name.split('.').pop();
+  const fileName = `${userId}-${Date.now()}.${fileExt}`;
+  const { error: uploadError } = await _supabase.storage.from('avatars').upload(fileName, regAvatarFile);
+
+  let avatarUrl = 'https://via.placeholder.com/100';
+  if (!uploadError) {
+    const { data: pubUrlData } = _supabase.storage.from('avatars').getPublicUrl(fileName);
+    avatarUrl = pubUrlData.publicUrl;
+  }
+
+  const { error: profileError } = await _supabase.from('profiles').insert([{
+    id: userId,
+    full_name: fullName,
+    role: role,
+    avatar_url: avatarUrl
+  }]);
+
+  if (profileError) {
+    $('regError').textContent = 'Error al guardar el perfil.';
+    $('regError').classList.remove('hidden');
+    $('regSubmitBtn').disabled = false;
+    $('regSubmitBtn').textContent = 'Crear Cuenta';
+    return;
+  }
+
+  await loadUserProfile(userId);
+  $('regSubmitBtn').disabled = false;
+  $('regSubmitBtn').textContent = 'Crear Cuenta';
+};
+
+$('btnLogout').onclick = async () => {
+  await _supabase.auth.signOut();
+  location.reload();
+};
+
+checkAuthSession();
 
 let shops=[], previewFile=null, current=0, timer;
 
