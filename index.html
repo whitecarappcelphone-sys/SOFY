@@ -632,12 +632,16 @@ const _supabase = createClient(supabaseUrl, supabaseKey);
 let currentUserProfile = null;
 let regAvatarFile = null;
 
-window.switchAuthTab = function(type) {
+function switchAuthTab(type) {
   $('tabLoginBtn').classList.toggle('active', type === 'login');
   $('tabRegisterBtn').classList.toggle('active', type === 'register');
   $('loginForm').classList.toggle('hidden', type !== 'login');
   $('registerForm').classList.toggle('hidden', type !== 'register');
-};
+}
+
+// Asignación directa de eventos de clic a los botones
+$('tabLoginBtn').onclick = () => switchAuthTab('login');
+$('tabRegisterBtn').onclick = () => switchAuthTab('register');
 
 window.selectRole = function(role) {
   $('roleCompradorLbl').classList.toggle('selected', role === 'comprador');
