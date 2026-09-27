@@ -598,13 +598,12 @@ Solicita tu PIN para gestionar tu página, subir tus productos y servicios, y co
       </label>
 
       <label>Foto de Perfil
-        <input type="file" id="regAvatarInput" accept="image/*" class="file" onchange="previewAuthAvatar(event)">
-        <button class="upload" type="button" onclick="document.getElementById('regAvatarInput').click()">
+        <input type="file" id="regAvatarInput" accept="image/*" style="display:none;" onchange="previewAuthAvatar(event)">
+        <div class="upload" onclick="document.getElementById('regAvatarInput').click()" style="cursor:pointer; text-align:center; padding: 10px;">
           <img id="regAvatarPreview" src="https://via.placeholder.com/70?text=Foto" class="avatar-upload-preview" alt="Foto">
-          <small style="text-align:center; display:block;">Haz clic para elegir foto</small>
-        </button>
+          <small style="display:block; margin-top:4px;">Haz clic aquí para tomar o elegir foto</small>
+        </div>
       </label>
-
       <label>Correo Electrónico
         <input type="email" id="regEmail" required placeholder="tu@email.com">
       </label>
