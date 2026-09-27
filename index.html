@@ -733,6 +733,7 @@ $('registerForm').onsubmit = async (e) => {
     return;
   }
 
+  // 1. Registro de usuario en Supabase Auth
   const { data: authData, error: authError } = await _supabase.auth.signUp({ email, password });
 
   if (authError || !authData.user) {
@@ -744,9 +745,12 @@ $('registerForm').onsubmit = async (e) => {
   }
 
   const userId = authData.user.id;
+
+  // 2. Subir imagen a avatars
   const fileExt = regAvatarFile.name.split('.').pop();
   const fileName = `${userId}-${Date.now()}.${fileExt}`;
-  const { error: uploadError } = await _supabase.storage.from('avatars').upload(fileName, regAvatarFile);
+  
+  const { error: uploadError } = await _supabase.storage.from('avatars').upload(fileName, regAvatarFile, { upsert: true });
 
   let avatarUrl = 'https://via.placeholder.com/100';
   if (!uploadError) {
@@ -754,7 +758,8 @@ $('registerForm').onsubmit = async (e) => {
     avatarUrl = pubUrlData.publicUrl;
   }
 
-  const { error: profileError } = await _supabase.from('profiles').insert([{
+  // 3. Crear el perfil en la tabla profiles
+  const { error: profileError } = await _supabase.from('profiles').upsert([{
     id: userId,
     full_name: fullName,
     role: role,
@@ -762,12 +767,18 @@ $('registerForm').onsubmit = async (e) => {
   }]);
 
   if (profileError) {
-    $('regError').textContent = 'Error al guardar el perfil.';
+    $('regError').textContent = 'Error al guardar perfil: ' + profileError.message;
     $('regError').classList.remove('hidden');
     $('regSubmitBtn').disabled = false;
     $('regSubmitBtn').textContent = 'Crear Cuenta';
     return;
   }
+
+  // Cargar perfil e ingresar
+  await loadUserProfile(userId);
+  $('regSubmitBtn').disabled = false;
+  $('regSubmitBtn').textContent = 'Crear Cuenta';
+};
 
   await loadUserProfile(userId);
   $('regSubmitBtn').disabled = false;
