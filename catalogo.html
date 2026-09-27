@@ -279,6 +279,51 @@
     @keyframes modalPop { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes toastIn { from { transform: translateY(14px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    /* ESTILOS DE PERFIL DE USUARIO EN BARRA SUPERIOR */
+.user-profile-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 4px 10px 4px 4px;
+  border-radius: 30px;
+}
+.user-profile-badge img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--primary-bright);
+}
+.user-profile-badge span {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-profile-badge .role-tag {
+  font-size: 8px;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: var(--primary-soft);
+  color: var(--primary-bright);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.btn-logout-cat {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+}
+.btn-logout-cat:hover { color: var(--danger); }
   </style>
 </head>
 <body>
@@ -295,6 +340,17 @@
           </div>
         </div>
         <div class="top-actions">
+          <!-- Badge de Perfil de Usuario -->
+<div id="userProfileBadge" class="user-profile-badge" style="display: none;">
+  <img id="userAvatarImg" src="" alt="Avatar">
+  <div style="display:flex; flex-direction:column;">
+    <span id="userNameTxt">Usuario</span>
+    <small id="userRoleTxt" class="role-tag">COMPRADOR</small>
+  </div>
+  <button id="btnLogout" class="btn-logout-cat" title="Cerrar sesión" onclick="logoutUser()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+  </button>
+</div>
           <button class="icon-btn" id="themeToggleBtn" title="Cambiar tema" onclick="toggleTheme()">🌙</button>
           <button class="icon-btn" id="adminGearBtn" title="Editar catálogo" aria-label="Editar catálogo" onclick="openPinModal()">⚙️</button>
         </div>
@@ -627,6 +683,55 @@
   const SUPABASE_URL = 'https://jpukgeomsmwyxtqnpcsd.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwdWtnZW9tc213eXh0cW5wY3NkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMDA3MzQsImV4cCI6MjEwNDU3NjczNH0.aALmQGfEkU4YCJM_9yUGJoUYfFVSLaZe0tnOlznKm54';
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    /* ==========================================
+     VERIFICACIÓN DE SESIÓN Y ROLES EN CATÁLOGO
+     ========================================== */
+  let currentUserProfile = null;
+
+  async function checkAuthAndLoadUser() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .single();
+
+    if (error || !data) {
+      await supabaseClient.auth.signOut();
+      window.location.href = 'index.html';
+      return;
+    }
+
+    currentUserProfile = data;
+
+    const avatarImg = document.getElementById('userAvatarImg');
+    const nameTxt = document.getElementById('userNameTxt');
+    const roleTxt = document.getElementById('userRoleTxt');
+    const profileBadge = document.getElementById('userProfileBadge');
+
+    if (avatarImg) avatarImg.src = data.avatar_url || 'https://via.placeholder.com/30';
+    if (nameTxt) nameTxt.textContent = data.full_name.split(' ')[0];
+    if (roleTxt) roleTxt.textContent = data.role.toUpperCase();
+    if (profileBadge) profileBadge.style.display = 'flex';
+
+    // Restricción: Si el rol es 'comprador', ocultar el botón de administración de catálogo (⚙️)
+    if (data.role === 'comprador') {
+      const adminGearBtn = document.getElementById('adminGearBtn');
+      if (adminGearBtn) adminGearBtn.style.display = 'none';
+    }
+  }
+
+  async function logoutUser() {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'index.html';
+  }
+
+  checkAuthAndLoadUser();
   const params = new URLSearchParams(window.location.search);
   const shopId = params.get('id');
   const SQL_HINT = `create table if not exists shop_categories (
