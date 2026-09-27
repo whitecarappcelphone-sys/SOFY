@@ -212,6 +212,51 @@
     .save-status { font-size: 0.85rem; text-align: center; margin-top: 10px; padding: 8px; border-radius: 6px; display: none; }
     .logo-preview-box { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
     .logo-preview-box img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
+    /* ESTILOS DE PERFIL DE USUARIO EN BARRA SUPERIOR */
+.user-profile-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px 4px 4px;
+  border-radius: 30px;
+}
+.user-profile-badge img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--primary);
+}
+.user-profile-badge span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+  max-width: 90px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-profile-badge .role-tag {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: rgba(19, 73, 137, 0.12);
+  color: var(--primary);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.btn-logout {
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+.btn-logout:hover { color: #ef4444; }
   </style>
 </head>
 <body>
@@ -222,6 +267,17 @@
         <a href="index.html" class="btn-back">&#8592; Volver al directorio</a>
         <button class="btn-gear" onclick="openPinModal()" title="Administrar negocio" aria-label="Administrar negocio">&#9881;</button>
       </div>
+      <!-- Badge de Perfil de Usuario -->
+<div id="userProfileBadge" class="user-profile-badge" style="display: none;">
+  <img id="userAvatarImg" src="" alt="Avatar">
+  <div style="display:flex; flex-direction:column;">
+    <span id="userNameTxt">Usuario</span>
+    <small id="userRoleTxt" class="role-tag">COMPRADOR</small>
+  </div>
+  <button id="btnLogout" class="btn-logout" title="Cerrar sesión" onclick="logoutUser()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+  </button>
+</div>
       <button id="btnThemeToggle" class="btn-theme-icon" onclick="toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema">
         <span id="themeIcon">&#127769;</span>
       </button>
@@ -476,6 +532,58 @@
     const SUPABASE_URL = 'https://jpukgeomsmwyxtqnpcsd.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwdWtnZW9tc213eXh0cW5wY3NkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMDA3MzQsImV4cCI6MjEwNDU3NjczNH0.aALmQGfEkU4YCJM_9yUGJoUYfFVSLaZe0tnOlznKm54';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    /* ==========================================
+   VERIFICACIÓN DE SESIÓN Y ROLES EN NEGOCIO
+   ========================================== */
+let currentUserProfile = null;
+
+async function checkAuthAndLoadUser() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) {
+    // Si no hay sesión iniciada, redirige al inicio obligatoriamente
+    window.location.href = 'index.html';
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single();
+
+  if (error || !data) {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'index.html';
+    return;
+  }
+
+  currentUserProfile = data;
+
+  // Mostrar datos del usuario en la barra superior
+  const avatarImg = document.getElementById('userAvatarImg');
+  const nameTxt = document.getElementById('userNameTxt');
+  const roleTxt = document.getElementById('userRoleTxt');
+  const profileBadge = document.getElementById('userProfileBadge');
+
+  if (avatarImg) avatarImg.src = data.avatar_url || 'https://via.placeholder.com/32';
+  if (nameTxt) nameTxt.textContent = data.full_name.split(' ')[0];
+  if (roleTxt) roleTxt.textContent = data.role.toUpperCase();
+  if (profileBadge) profileBadge.style.display = 'flex';
+
+  // Restricción: Si el rol es 'comprador', ocultar el botón de administración (engrane)
+  if (data.role === 'comprador') {
+    const gearBtn = document.querySelector('.btn-gear');
+    if (gearBtn) gearBtn.style.display = 'none';
+  }
+}
+
+async function logoutUser() {
+  await supabaseClient.auth.signOut();
+  window.location.href = 'index.html';
+}
+
+// Verificar sesión al cargar la página
+checkAuthAndLoadUser();
     const params = new URLSearchParams(window.location.search);
     const shopId = params.get('id');
     let currentShopData = null;
