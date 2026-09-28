@@ -345,13 +345,14 @@
     </div>
   </div>
 
+  <!-- (5) El PIN fue reemplazado: el acceso se hace con la contraseña de la cuenta -->
   <div id="pinModal" class="modal-overlay">
     <div class="modal-card">
       <button class="btn-close-modal" onclick="closePinModal()">&times;</button>
       <h3 style="font-size: 1.2rem; font-weight: 700;">Acceso Propietario</h3>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Ingresa el PIN de seguridad</p>
-      <input type="password" id="pinInput" class="pin-input" maxlength="6" placeholder="••••">
-      <div id="pinError" class="pin-error">PIN incorrecto. Inténtalo de nuevo.</div>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Ingresa la contraseña de tu cuenta para administrar tu página y tu catálogo</p>
+      <input type="password" id="pinInput" class="pin-input" autocomplete="current-password" placeholder="••••••••" style="letter-spacing:4px;" onkeydown="if(event.key==='Enter'){event.preventDefault();verifyPin();}">
+      <div id="pinError" class="pin-error">Contraseña incorrecta. Inténtalo de nuevo.</div>
       <button class="btn-modal-submit" onclick="verifyPin()">ENTRAR</button>
     </div>
   </div>
@@ -505,7 +506,7 @@
           <label>Logo del Negocio</label>
           <input type="file" id="editLogoFile" class="form-control" accept="image/*" onchange="handleImageUpload(event)">
           <div class="logo-preview-box">
-            <img id="logoPreview" src="https://via.placeholder.com/110" alt="Vista previa del logo">
+            <img id="logoPreview" src="" alt="Vista previa del logo">
             <span style="font-size: 0.8rem; color: var(--text-muted);">Vista previa del logo</span>
           </div>
         </div>
@@ -534,14 +535,23 @@
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     /* ==========================================
    VERIFICACIÓN DE SESIÓN Y ROLES EN NEGOCIO
+   (2) La app siempre es navegable: si no hay sesión
+   solo se oculta el panel de administración.
    ========================================== */
 let currentUserProfile = null;
+
+function hideOwnerTools() {
+  const gearBtn = document.querySelector('.btn-gear');
+  if (gearBtn) gearBtn.style.display = 'none';
+  const badge = document.getElementById('userProfileBadge');
+  if (badge) badge.style.display = 'none';
+}
 
 async function checkAuthAndLoadUser() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) {
-    // Si no hay sesión iniciada, redirige al inicio obligatoriamente
-    window.location.href = 'index.html';
+    currentUserProfile = null;
+    hideOwnerTools();
     return;
   }
 
@@ -552,8 +562,8 @@ async function checkAuthAndLoadUser() {
     .single();
 
   if (error || !data) {
-    await supabaseClient.auth.signOut();
-    window.location.href = 'index.html';
+    currentUserProfile = null;
+    hideOwnerTools();
     return;
   }
 
@@ -565,12 +575,12 @@ async function checkAuthAndLoadUser() {
   const roleTxt = document.getElementById('userRoleTxt');
   const profileBadge = document.getElementById('userProfileBadge');
 
-  if (avatarImg) avatarImg.src = data.avatar_url || 'https://via.placeholder.com/32';
-  if (nameTxt) nameTxt.textContent = data.full_name.split(' ')[0];
-  if (roleTxt) roleTxt.textContent = data.role.toUpperCase();
+  if (avatarImg) avatarImg.src = data.avatar_url || '';
+  if (nameTxt) nameTxt.textContent = (data.full_name || 'Usuario').split(' ')[0];
+  if (roleTxt) roleTxt.textContent = (data.role || 'comprador').toUpperCase();
   if (profileBadge) profileBadge.style.display = 'flex';
 
-  // Restricción: Si el rol es 'comprador', ocultar el botón de administración (engrane)
+  // (4) Restricción: si el rol es 'comprador', no ve el panel de administración (engrane)
   if (data.role === 'comprador') {
     const gearBtn = document.querySelector('.btn-gear');
     if (gearBtn) gearBtn.style.display = 'none';
@@ -648,7 +658,7 @@ checkAuthAndLoadUser();
         if (btnPublicCatalog) btnPublicCatalog.href = catalogUrl;
         const shopLogo = document.getElementById('shopLogo');
         const shopName = document.getElementById('shopName');
-        if (shopLogo) shopLogo.src = shop.logo || 'https://via.placeholder.com/110';
+        if (shopLogo) shopLogo.src = shop.logo || '';
         if (shopName) shopName.textContent = shop.name || 'Sin nombre';
         const videoWrapper = document.getElementById('videoWrapper');
         const shopVideo = document.getElementById('shopVideo');
@@ -708,7 +718,7 @@ checkAuthAndLoadUser();
         const editAddress = document.getElementById('editAddress');
         if (editAddress) editAddress.value = shop.address || '';
         const logoPreview = document.getElementById('logoPreview');
-        if (logoPreview) logoPreview.src = shop.logo || 'https://via.placeholder.com/110';
+        if (logoPreview) logoPreview.src = shop.logo || '';
         if (loadingState) loadingState.style.display = 'none';
         if (shopDetail) shopDetail.style.display = 'block';
       } catch (err) {
@@ -775,16 +785,38 @@ checkAuthAndLoadUser();
       if (pinInput) pinInput.value = '';
       if (pinError) pinError.style.display = 'none';
       if (pinModal) pinModal.style.display = 'flex';
+      if (pinInput) setTimeout(() => pinInput.focus(), 120);
     }
     function closePinModal() { const pinModal = document.getElementById('pinModal'); if (pinModal) pinModal.style.display = 'none'; }
-    function verifyPin() {
+
+    /* (5) Acceso con la CONTRASEÑA de la cuenta (ya no con PIN) */
+    async function verifyPin() {
       const pinInput = document.getElementById('pinInput');
+      const pinError = document.getElementById('pinError');
       if (!pinInput) return;
-      const enteredPin = pinInput.value.trim();
-      const actualPin = currentShopData ? (currentShopData.pin || '1234') : '1234';
-      if (enteredPin === actualPin) { closePinModal(); openAdminDrawer(); }
-      else { const pinError = document.getElementById('pinError'); if (pinError) pinError.style.display = 'block'; }
+      const enteredPin = pinInput.value || '';
+      const fail = (msg) => { if (pinError) { pinError.textContent = msg; pinError.style.display = 'block'; } };
+
+      if (!currentUserProfile) { fail('Inicia sesión con tu cuenta de VENDEDOR para administrar.'); return; }
+      if (currentUserProfile.role !== 'vendedor') { fail('Solo las cuentas de VENDEDOR pueden administrar este negocio.'); return; }
+
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) { fail('Tu sesión expiró. Vuelve a iniciar sesión.'); return; }
+
+      if (pinError) pinError.style.display = 'none';
+      const { error } = await supabaseClient.auth.signInWithPassword({ email: session.user.email, password: enteredPin });
+      if (error) { fail('Contraseña incorrecta. Inténtalo de nuevo.'); return; }
+
+      // El propietario solo administra su propio negocio
+      if (currentShopData && currentShopData.owner_id && String(currentShopData.owner_id) !== String(session.user.id)) {
+        fail('Esta cuenta no administra este negocio.');
+        return;
+      }
+
+      closePinModal();
+      openAdminDrawer();
     }
+
     function openAdminDrawer() {
       const drawerOverlay = document.getElementById('drawerOverlay');
       const adminDrawer = document.getElementById('adminDrawer');
