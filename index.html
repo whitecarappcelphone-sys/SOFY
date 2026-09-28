@@ -475,6 +475,49 @@ a.category-shop:hover{background:var(--soft);padding-left:8px}
 .pf-head-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:0 14px;border:1px solid var(--line);background:var(--soft);color:var(--text);border-radius:12px;font-size:12px;font-weight:800;cursor:pointer;transition:.2s;white-space:nowrap}
 .pf-head-btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
 .pf-head-btn svg{width:16px;height:16px;flex-shrink:0}
+
+/* ============================================================
+   CAMBIOS SOLICITADOS (11 puntos)
+   ============================================================ */
+
+/* 10. Botón "Iniciar sesión" más compacto para no desplazar el toggle de tema */
+.primary.login-top{min-height:40px;padding:0 15px;font-size:13px;gap:7px}
+.primary.login-top svg{width:16px;height:16px}
+
+/* 10. Badge de perfil: mostrar nombre y rol SIN recortar el texto */
+.user-profile-badge span{max-width:none}
+.user-profile-badge{padding-right:12px}
+
+/* 7/8. Botón "¿QUIERES VENDER?" (topbar) + FAB flotante en móvil */
+.create-top .label-mobile{display:none}
+#sellFab{align-items:center}
+.sell-fab{position:fixed;left:14px;bottom:18px;z-index:90;display:none;align-items:center;gap:9px;padding:12px 17px;border:0;border-radius:30px;background:linear-gradient(135deg,#4dccff,var(--deep));color:#fff;font-weight:800;font-size:13px;box-shadow:0 14px 32px rgba(8,127,209,.42);cursor:pointer;animation:slideInLeft .55s cubic-bezier(.2,.8,.2,1) both}
+.sell-fab svg{width:18px;height:18px}
+.sell-fab.show{display:flex}
+@keyframes slideInLeft{from{transform:translateX(-160%);opacity:0}to{transform:translateX(0);opacity:1}}
+@media(min-width:761px){.sell-fab{display:none!important}}
+@media(max-width:760px){.create-top{display:none!important}.create-top .label-mobile{display:none}}
+
+/* 9. Buscador de categorías con sugerencias */
+.cat-search{position:relative;max-width:440px;margin:0 0 24px;height:50px;display:flex;align-items:center;gap:10px;padding:0 16px;border:1px solid var(--line);border-radius:15px;background:var(--surface);color:var(--muted)}
+.cat-search:focus-within{border-color:var(--accent)}
+.cat-search input{width:100%;border:0;outline:0;background:transparent;color:var(--text)}
+.cat-search svg{width:18px;height:18px;flex-shrink:0}
+.cat-suggestions{position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:30;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.cat-suggestions button{width:100%;text-align:left;background:transparent;border:0;padding:12px 16px;color:var(--text);font-weight:600;cursor:pointer;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cat-suggestions button:last-child{border-bottom:0}
+.cat-suggestions button:hover{background:var(--soft)}
+.cat-suggestions small{color:var(--muted);font-weight:400;white-space:nowrap}
+
+/* 2. Modal de productos del vendedor */
+#productsModal .category-shops{max-height:62vh;overflow:auto;margin-top:18px}
+#productsModal .category-shop{cursor:pointer}
+.stat-clickable{cursor:pointer}
+.stat-clickable:hover b{color:var(--accent)}
+
+/* 11. Botón X para cerrar el panel de autenticación */
+#authCloseBtn{top:18px;right:18px}
+#authModal .modal.small{padding-top:40px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head><body>
@@ -502,13 +545,15 @@ a.category-shop:hover{background:var(--soft);padding-left:8px}
   </div>
 </div>
 <main class="app">
-<header class="topbar"><a class="brand" href="#inicio"><img id="brandLogo" src="https://i.imgur.com/HuC4TzS.gif" alt="Madelena"><span class="brand-copy"><small>Tu barrio, mas cerca</small></span></a><div class="actions"><button class="primary" id="loginTopBtn"><span data-icon="user"></span>Iniciar sesión</button><div id="userProfileBadge" class="user-profile-badge hidden" title="Ver mi perfil">
+<header class="topbar"><a class="brand" href="#inicio"><img id="brandLogo" src="https://i.imgur.com/HuC4TzS.gif" alt="Madelena"><span class="brand-copy"><small>Tu barrio, mas cerca</small></span></a><div class="actions"><button class="primary login-top" id="loginTopBtn"><span data-icon="user"></span>Iniciar sesión</button><div id="userProfileBadge" class="user-profile-badge hidden" title="Ver mi perfil">
   <img id="userAvatarImg" src="" alt="Avatar">
   <div style="display:flex; flex-direction:column;">
     <span id="userNameTxt">Usuario</span>
     <small id="userRoleTxt" class="role-tag">COMPRADOR</small>
   </div>
-</div><button class="theme" id="themeBtn" aria-label="Cambiar tema"><span id="sun" data-icon="sun"></span><span id="moon" data-icon="moon"></span></button><button class="primary create-top" data-open-create><span data-icon="plus"></span>Crear comercio</button></div></header>
+</div><button class="theme" id="themeBtn" aria-label="Cambiar tema"><span id="sun" data-icon="sun"></span><span id="moon" data-icon="moon"></span></button>
+<!-- 7/8. Botón "¿QUIERES VENDER?" (solo compradores logueados). En móvil se oculta y aparece el FAB -->
+<button class="primary create-top" id="createTopBtn" data-open-create><span data-icon="plus"></span>¿QUIERES VENDER?</button></div></header>
 <section class="hero" id="inicio">
   <div class="slides" id="slidesContainer">
     <div class="shade"></div>
@@ -528,7 +573,22 @@ a.category-shop:hover{background:var(--soft);padding-left:8px}
 </section>
 <!-- (9) Se eliminaron los textos "Directorio local" y "Comercios 1A" para que el contenido suba -->
 <section class="content"><label class="search"><span data-icon="search"></span><input id="search" placeholder="Buscar producto, referencia o comercio"></label><div id="shopContent"></div></section>
-<section class="content categories" id="categorias"><div class="heading"><div><p class="eyebrow">Explora a tu manera</p><h2>Categorias</h2></div><span class="count" id="categoryCount"></span></div><div id="categoryContent"></div></section><footer><p>Hecho para impulsar el comercio local.</p></footer></main>
+<section class="content categories" id="categorias">
+  <div class="heading"><div><p class="eyebrow">Explora a tu manera</p><h2>Categorias</h2></div><span class="count" id="categoryCount"></span></div>
+  <!-- 9. Buscador de categorías con sugerencias -->
+  <div class="cat-search">
+    <span data-icon="search"></span>
+    <input id="catSearch" type="text" placeholder="Buscar categoría..." autocomplete="off">
+    <div class="cat-suggestions hidden" id="catSuggestions"></div>
+  </div>
+  <div id="categoryContent"></div>
+</section>
+<footer><p>Hecho para impulsar el comercio local.</p></footer>
+</main>
+
+<!-- FAB móvil "¿QUIERES VENDER?" (aparece solo en móvil para compradores logueados) -->
+<button class="sell-fab" id="sellFab" type="button"><span data-icon="plus"></span>¿QUIERES VENDER?</button>
+
 <div class="backdrop hidden" id="createModal"><section class="modal wide"><button class="close" data-close-create><span data-icon="close"></span></button><p class="eyebrow">Unete al directorio</p><h2>Crea tu comercio</h2><p class="notice hidden" id="onboardNote">Paso 1 de 2 · Registra los datos de tu comercio. Al continuar completarás tu cuenta.</p><p class="intro">¡Tu tienda estará en el directorio!
 Registra tu página, sube tus productos y servicios, y conecta con millones de clientes.</p><form id="shopForm"><div class="form-grid"><div class="form-col"><label>Nombre del comercio<input id="shopName" maxlength="60" required></label><label>Categoría
   <select id="shopCategory" class="form-control" required>
@@ -635,11 +695,19 @@ Registra tu página, sube tus productos y servicios, y conecta con millones de c
 <div class="backdrop hidden" id="passwordModal"><section class="modal small"><button class="close" data-close><span data-icon="close"></span></button><p class="eyebrow">Acceso propietario</p><h2 id="pwTitle">Administrar negocio</h2><p class="intro" id="pwIntro">Ingresa la contraseña de tu cuenta para administrar tu página de negocio y tu catálogo.</p><form id="passwordForm"><label>Contraseña<input type="password" id="pwInput" autocomplete="current-password" required placeholder="••••••••"></label><p class="error hidden" id="pwError">Contraseña incorrecta. Inténtalo de nuevo.</p><button class="primary submit" type="submit" id="pwSubmit">Verificar y continuar</button></form></section></div>
 <div class="backdrop hidden" id="profileModal"><section class="modal profile"><button class="close" data-close><span data-icon="close"></span></button><div class="profile-head"><img id="pfAvatar" src="" alt="Avatar"><div><span class="pf-avatar-badge" id="pfRole">COMPRADOR</span><h2 id="pfName" style="margin-top:6px;">Usuario</h2><p id="pfEmail">correo@ejemplo.com</p></div><div class="pf-head-actions" id="pfHeadActions"><button class="pf-head-btn hidden" id="pfAdminBtn" type="button" title="Administrar mi negocio"><span data-icon="gearColor"></span>Administrar</button><button class="pf-head-btn hidden" id="pfSupportBtn" type="button" title="Soporte"><span data-icon="help"></span>Soporte</button></div></div><div class="profile-stats" id="pfStats"></div><div id="pfBody"></div><button class="primary submit" id="pfLogout" style="margin-top:22px;">Cerrar sesión</button></section></div>
 <div class="backdrop hidden" id="logoutModal"><section class="modal small" style="text-align:center"><div class="logout-icon"><span data-icon="logout"></span></div><p class="eyebrow" style="margin:0 0 6px">Sesión</p><h2 style="font-size:26px;margin:0 0 10px">¿Cerrar sesión?</h2><p style="color:var(--muted);line-height:1.6;margin:0;font-size:14px">¿Estás seguro de que deseas cerrar sesión? Tendrás que iniciar sesión de nuevo para volver a entrar.</p><div class="logout-actions"><button class="primary submit" id="logoutCancelBtn" type="button">Cancelar</button><button class="primary submit danger" id="logoutConfirmBtn" type="button">Sí, cerrar sesión</button></div></section></div>
+
+<!-- 2. Modal de productos del vendedor (se abre al presionar la cantidad de productos) -->
+<div class="backdrop hidden" id="productsModal"><section class="modal"><button class="close" data-close-products><span data-icon="close"></span></button><p class="eyebrow">Tu catálogo</p><h2 id="productsModalTitle">Productos</h2><div id="productsModalBody" class="category-shops"></div></section></div>
+
 <div class="toast hidden" id="toast"></div>
+
 <!-- MODAL DE INICIO DE SESIÓN / REGISTRO (aparece solo cuando se necesita) -->
 <div class="backdrop hidden" id="authModal">
   <section class="modal small" style="pointer-events: auto;">
-        <div class="auth-tabs">
+    <!-- 11. Botón X para cerrar el panel de autenticación -->
+    <button class="close" id="authCloseBtn" type="button" aria-label="Cerrar"><span data-icon="close"></span></button>
+
+    <div class="auth-tabs">
       <button class="auth-tab-btn active" id="tabLoginBtn" type="button">Iniciar Sesión</button>
       <button class="auth-tab-btn" id="tabRegisterBtn" type="button">Registrarse</button>
     </div>
@@ -682,10 +750,11 @@ Registra tu página, sube tus productos y servicios, y conecta con millones de c
       </label>
 
       <label>Foto de Perfil
-        <input type="file" id="regAvatarInput" accept="image/*" style="display:none;" onchange="previewAuthAvatar(event)">
+        <!-- 4. El input abre la cámara del móvil (capture="user") para tomar una selfie -->
+        <input type="file" id="regAvatarInput" accept="image/*" capture="user" style="display:none;" onchange="previewAuthAvatar(event)">
         <div class="upload" onclick="document.getElementById('regAvatarInput').click()" style="cursor:pointer; text-align:center; padding: 10px;">
           <img id="regAvatarPreview" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 24 24' fill='none' stroke='%2329b6f6' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M20 21a8 8 0 1 0-16 0'/></svg>" class="avatar-upload-preview" alt="Foto">
-          <small style="display:block; margin-top:4px;">Haz clic aquí para tomar o elegir foto</small>
+          <small style="display:block; margin-top:4px;">Toca para tomar una foto o elegir una imagen</small>
         </div>
       </label>
       <label>Correo Electrónico
@@ -717,7 +786,10 @@ const _supabase = createClient(supabaseUrl, supabaseKey);
 const FORMSPREE_ENDPOINT='https://formspree.io/f/mwlpbjpq';
 async function sendFormspree(subject,data){
   try{
+    // 5. Se envía copia (CC) al correo del propio usuario, además del titular.
     const body=Object.assign({'_subject':subject,'_replyto':data.correo||data.email||'',fecha:new Date().toLocaleString('es-CO'),plataforma:'App Sofy'},data);
+    const ccEmail=data.correo||data.email;
+    if(ccEmail) body._cc=ccEmail;
     const r=await fetch(FORMSPREE_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(body)});
     return r.ok;
   }catch(err){console.warn('No se pudo enviar el correo de confirmación:',err);return false}
@@ -734,6 +806,11 @@ let regAvatarFile = null;
 let commerceDraft = null;      // datos del comercio en el onboarding del vendedor
 let onboardingMode = false;    // true = el comercio se registra ANTES de crear la cuenta
 let pendingAuthAction = null;  // acción a continuar tras autenticarse
+
+// Estado global para el modal de productos del vendedor
+let currentMyBids = [];
+let currentIsSeller = false;
+let categoryData = {};         // agrupación de comercios por categoría
 
 function switchAuthTab(type) {
   $('tabLoginBtn').classList.toggle('active', type === 'login');
@@ -765,6 +842,9 @@ $('tabLoginBtn').onclick = () => switchAuthTab('login');
 $('tabRegisterBtn').onclick = () => switchAuthTab('register');
 $('loginTopBtn').onclick = () => { pendingAuthAction = null; openAuth('login'); };
 
+// 11. Cerrar el panel de autenticación con la X
+if ($('authCloseBtn')) $('authCloseBtn').onclick = dismissAuth;
+
 window.selectRole = function(role) {
   $('roleCompradorLbl').classList.toggle('selected', role === 'comprador');
   $('roleVendedorLbl').classList.toggle('selected', role === 'vendedor');
@@ -783,8 +863,8 @@ window.previewAuthAvatar = function(e) {
 };
 
 /* ---------- Visibilidad de engranes y botones según rol ---------- */
-/* (3) Los botones "Administrar" y "Soporte" ahora viven dentro del
-   modal de perfil, junto al nombre y el rol (ver pfAdminBtn / pfSupportBtn) */
+/* 7/8. El botón "¿QUIERES VENDER?" solo aparece para compradores logueados.
+   En móvil se oculta el de la barra y se muestra el FAB flotante. */
 function applyRoleUI() {
   const logged = !!currentUserProfile;
   $('loginTopBtn').classList.toggle('hidden', logged);
@@ -794,6 +874,12 @@ function applyRoleUI() {
     $('userNameTxt').textContent = (currentUserProfile.full_name || 'Usuario').split(' ')[0];
     $('userRoleTxt').textContent = (currentUserProfile.role || 'comprador').toUpperCase();
   }
+
+  // Mostrar "¿QUIERES VENDER?" solo si es comprador y está logueado
+  const isComprador = logged && (currentUserProfile.role || 'comprador') === 'comprador';
+  const isMobile = window.matchMedia('(max-width:760px)').matches;
+  $('createTopBtn').classList.toggle('hidden', !isComprador);
+  $('sellFab').classList.toggle('show', isComprador && isMobile);
 }
 
 async function loadUserProfile(userId) {
@@ -1206,6 +1292,7 @@ function getRecents(){try{return JSON.parse(localStorage.getItem(recentsKey())||
 /* ---------- CATEGORÍAS (7) los comercios siguen igual ---------- */
 function renderCategories(){
   let g={};shops.forEach(s=>(g[s.category]||(g[s.category]=[])).push(s));
+  categoryData=g;                                   // 9. se guarda para el buscador
   let entries=Object.entries(g);
   $('categoryCount').textContent=entries.length?entries.length+' disponibles':'';
   $('categoryContent').innerHTML=!entries.length?'<div class="category-empty"><p>Las categorias apareceran aqui cuando registres comercios.</p></div>':'<div class="category-grid" id="categoryGrid">'+entries.map(([c,a])=>'<button class="category" data-category="'+esc(c)+'" data-idx="0"><img src="'+a[0].logo+'"><span class="category-shade"></span>'+(a.length>1?'<span class="cat-dots">'+a.map((x,n)=>'<b'+(n===0?' class="on"':'')+'></b>').join('')+'</span>':'')+'<span class="category-label"><strong>'+esc(c)+'</strong><small>'+a.length+' comercios</small></span><i>&#8599;</i></button>').join('')+'</div>';
@@ -1213,14 +1300,17 @@ function renderCategories(){
   bindCategoryRotator();
 }
 
+/* 9. Abre el modal de una categoría (usado por la cuadrícula y por el buscador) */
+function openCategory(cat){
+  if(!cat)return;
+  $('categoryTitle').textContent=cat;
+  $('categoryShops').innerHTML=shops.filter(s=>s.category===cat).map(s=>'<a href="negocio.html?id='+s.business_id+'" target="_blank" class="category-shop"><img src="'+s.logo+'"><span><strong>'+esc(s.name)+'</strong><small>'+esc(cat)+'</small></span></a>').join('');
+  $('categoryModal').classList.remove('hidden');
+}
+
 function bind(){
-  document.querySelectorAll('[data-open-create]').forEach(b=>b.onclick=()=>openCreateFlow());
-  document.querySelectorAll('[data-category]').forEach(b=>b.onclick=()=>{
-    let c=b.dataset.category;
-    $('categoryTitle').textContent=c;
-    $('categoryShops').innerHTML=shops.filter(s=>s.category===c).map(s=>'<a href="negocio.html?id='+s.business_id+'" target="_blank" class="category-shop"><img src="'+s.logo+'"><span><strong>'+esc(s.name)+'</strong><small>'+esc(c)+'</small></span></a>').join('');
-    $('categoryModal').classList.remove('hidden');
-  });
+  document.querySelectorAll('[data-open-create]').forEach(b=>b.onclick=()=>openSellFlow());
+  document.querySelectorAll('[data-category]').forEach(b=>b.onclick=()=>openCategory(b.dataset.category));
 }
   function open(id){$(id).classList.remove('hidden')}
 function closeAll(){document.querySelectorAll('.backdrop').forEach(m=>m.classList.add('hidden'))}
@@ -1236,6 +1326,12 @@ function openCreateFlow(){
   onboardingMode=false;
   $('onboardNote').classList.add('hidden');
   open('createModal');
+}
+/* 7/8. "¿QUIERES VENDER?" → inicia el onboarding de vendedor (compradores incluidos) */
+function openSellFlow(){
+  if(!currentUserProfile){openAuth('register');return}
+  // Para compradores (y vendedores sin comercio) inicia el alta de comercio.
+  startVendedorOnboarding();
 }
 function startVendedorOnboarding(){
   onboardingMode=true;
@@ -1300,15 +1396,23 @@ $('passwordForm').onsubmit=async e=>{
   if(typeof fn==='function')fn();
 };
 
-/* (4/5) ID del comercio del vendedor conectado (se consulta siempre a la BD) */
+/* (4/5) ID del comercio del vendedor conectado (se consulta siempre a la BD)
+   1/3. Se añade fallback a localStorage por si el comercio no tiene owner_id
+   (p.ej. "COMERCIO DE PRUEBA" creado por otra vía). */
 async function getMyShopId(){
   try{
     const uid=currentUserProfile?currentUserProfile.id:null;
     if(!uid)return null;
     const { data } = await _supabase.from('shops').select('business_id,owner_id').eq('owner_id',uid).limit(1);
     if(data&&data.length){localStorage.setItem('sofy_my_shop_'+uid,data[0].business_id);return data[0].business_id}
+    // Fallback: usar el business_id guardado en este navegador
     const cached=localStorage.getItem('sofy_my_shop_'+uid);
-    if(cached)return cached;
+    if(cached){
+      // Verificar que el comercio exista realmente
+      const { data: exists } = await _supabase.from('shops').select('business_id').eq('business_id',cached).limit(1);
+      if(exists&&exists.length) return cached;
+      return cached;
+    }
   }catch(e){}
   return null;
 }
@@ -1604,7 +1708,13 @@ async function openProfileModal(){
       const mine=shops.filter(s=>s.owner_id&&String(s.owner_id)===String(u.id));
       if(mine.length)myBids=mine.map(s=>String(s.business_id));
     }
+    // 1. Incluir SIEMPRE el comercio guardado en este navegador (p.ej. "COMERCIO DE PRUEBA")
+    const cached2=localStorage.getItem('sofy_my_shop_'+u.id);
+    if(cached2&&!myBids.includes(String(cached2)))myBids.push(String(cached2));
   }
+  // Estado para el modal de productos
+  currentMyBids=myBids;
+  currentIsSeller=isSeller;
 
   const orders=await fetchOrdersFor(isSeller?null:u.id,isSeller?myBids:null);
   const favs=await fetchFavCount(u.id);
@@ -1614,7 +1724,11 @@ async function openProfileModal(){
   if(isSeller){
     const clients=new Set((orders||[]).map(o=>String(o.buyer)).filter(x=>x&&x!=='null'));
     const prodCount=myBids.length?products.filter(p=>myBids.includes(p._bid)).length:0;
-    $('pfStats').innerHTML='<div><b>'+(myBids.length||1)+'</b><small>Tiendas</small></div><div><b>'+prodCount+'</b><small>Productos</small></div><div><b>'+clients.size+'</b><small>Clientes</small></div>';
+    // 2. La tarjeta "Productos" es clicable y abre el modal de productos
+    $('pfStats').innerHTML='<div><b>'+(myBids.length||1)+'</b><small>Tiendas</small></div>'+
+      '<div id="pfProductsStat" class="stat-clickable" title="Ver tus productos"><b>'+prodCount+'</b><small>Productos</small></div>'+
+      '<div><b>'+clients.size+'</b><small>Clientes</small></div>';
+    const ps=$('pfProductsStat'); if(ps)ps.onclick=openProductsModal;
   }else{
     $('pfStats').innerHTML='<div><b>'+((orders&&orders.length)||0)+'</b><small>Compras</small></div><div><b>'+recents.length+'</b><small>Vistos</small></div><div><b>'+favs+'</b><small>Favoritos</small></div>';
   }
@@ -1627,7 +1741,7 @@ async function openProfileModal(){
     if(mine.length){
       html+=mine.map(s=>'<a class="pf-item" href="negocio.html?id='+encodeURIComponent(s.business_id)+'"><img src="'+(s.logo?esc(s.logo):FALLBACK_IMG)+'" alt=""><span><b>'+esc(s.name)+'</b><small>'+esc(s.category||'')+'</small></span><span class="pf-price">Administrar</span></a>').join('');
     }else{
-      html+='<p class="pf-empty">Aún no vemos comercios asociados a tu cuenta. Usa el botón <b>Crear comercio</b> para publicar el primero.</p>';
+      html+='<p class="pf-empty">Aún no vemos comercios asociados a tu cuenta. Usa el botón <b>¿Quieres vender?</b> para publicar el primero.</p>';
     }
     html+='<p class="pf-section-title">Mis clientes</p>';
     if(orders&&orders.length){
@@ -1661,6 +1775,19 @@ async function openProfileModal(){
 }
 $('userProfileBadge').onclick=openProfileModal;
 
+/* 2. Modal de productos del vendedor (al presionar la cantidad de productos) */
+function openProductsModal(){
+  const list=products.filter(p=>currentMyBids.includes(p._bid));
+  $('productsModalTitle').textContent=currentIsSeller?'Tus productos':'Productos';
+  if(!list.length){
+    $('productsModalBody').innerHTML='<p class="pf-empty">Aún no tienes productos publicados. Agrégalos desde el panel de tu negocio (catálogo).</p>';
+  }else{
+    $('productsModalBody').innerHTML=list.map(p=>'<a class="category-shop" href="catalogo.html'+(p._bid?'?id='+encodeURIComponent(p._bid):'')+'"><img src="'+(p._img?esc(p._img):FALLBACK_IMG)+'" alt=""><span><strong>'+esc(p._name)+'</strong><small>'+(p._ref?'REF '+esc(p._ref)+' · ':'')+formatPrice(p._price)+'</small></span></a>').join('');
+  }
+  open('productsModal');
+}
+document.querySelectorAll('[data-close-products]').forEach(b=>b.onclick=()=>$('productsModal').classList.add('hidden'));
+
 /* ---------- CIERRE DE MODALES ---------- */
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeAll);
 document.querySelectorAll('[data-close-create]').forEach(b=>b.onclick=closeCreateModal);
@@ -1677,6 +1804,8 @@ let _wideMode=window.matchMedia('(min-width:761px)').matches;
 window.addEventListener('resize',()=>{
   const w=window.matchMedia('(min-width:761px)').matches;
   if(w!==_wideMode){_wideMode=w;renderProducts();}
+  // 7/8. Re-evaluar visibilidad del botón / FAB al rotar o redimensionar
+  applyRoleUI();
 });
 
 $('uploadBtn').onclick=()=>$('fileInput').click();
@@ -1695,7 +1824,28 @@ $('fileInput').onchange=()=>{
 };
 
 bind();
+$('sellFab').onclick=openSellFlow;   // 8. FAB móvil "¿QUIERES VENDER?"
 fetchShops().then(fetchProducts);
+
+/* ============================================================
+   9. BUSCADOR DE CATEGORÍAS CON SUGERENCIAS
+   ============================================================ */
+function setupCategorySearch(){
+  const input=$('catSearch'); if(!input)return;
+  const box=$('catSuggestions');
+  function render(){
+    const q=input.value.toLowerCase().trim();
+    const cats=Object.keys(categoryData).filter(c=>!q||c.toLowerCase().includes(q));
+    if(!cats.length){box.classList.add('hidden');box.innerHTML='';return;}
+    box.innerHTML=cats.slice(0,8).map(c=>'<button type="button" data-cat="'+esc(c)+'">'+esc(c)+' <small>('+categoryData[c].length+')</small></button>').join('');
+    box.classList.remove('hidden');
+  }
+  input.oninput=render;
+  input.onfocus=render;
+  box.onclick=e=>{const b=e.target.closest('[data-cat]');if(!b)return;openCategory(b.dataset.cat);input.value='';box.classList.add('hidden');};
+  document.addEventListener('click',e=>{if(!e.target.closest('.cat-search'))box.classList.add('hidden');});
+}
+setupCategorySearch();
 </script>
 <!-- Registro del Service Worker para PWA -->
 <script>
