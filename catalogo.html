@@ -431,6 +431,21 @@
       .user-profile-badge span { max-width: 66px; }
       .user-profile-badge .role-tag { max-width: 66px; }
     }
+    /* MODAL DE AUTENTICACIÓN (mismo de index.html) */
+    #authModal { z-index: 1300; }
+    .auth-tabs { display: flex; gap: 8px; margin: 0 48px 16px 0; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .auth-tab-btn { flex: 1; padding: 10px; background: transparent; border: 0; color: var(--muted); font-weight: 700; font-size: .86rem; cursor: pointer; border-radius: 10px; font-family: inherit; }
+    .auth-tab-btn.active { background: var(--bg-soft); color: var(--primary-bright); }
+    .auth-eyebrow { margin: 0 0 4px; color: var(--primary-bright); font-weight: 800; font-size: .64rem; text-transform: uppercase; letter-spacing: .14em; }
+    .auth-title { margin: 0 0 12px; font-size: 1.3rem; font-weight: 700; }
+    .auth-notice { color: var(--primary-bright); font-size: .76rem; font-weight: 700; line-height: 1.45; margin: 0 0 10px; }
+    .role-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+    .role-option { border: 1px solid var(--border); background: var(--bg-soft); padding: 12px; border-radius: 12px; text-align: center; cursor: pointer; font-size: .82rem; font-weight: 700; transition: .2s; }
+    .role-option input { display: none; }
+    .role-option.selected { border-color: var(--primary-bright); background: var(--primary-soft); color: var(--primary-bright); }
+    .avatar-upload-preview { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; margin: 8px auto; display: block; border: 2px dashed var(--primary-bright); background: var(--bg-soft); }
+    .auth-upload { border: 1.5px dashed var(--border-strong); border-radius: 14px; padding: 10px; text-align: center; cursor: pointer; color: var(--muted); font-size: .76rem; background: var(--bg-soft); }
+    .name-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   </style>
 </head>
 <body>
@@ -446,7 +461,7 @@
               <div class="rating-badge" id="shopRatingBadge" onclick="scrollToReviews()"></div>
             </div>
           </div>
-          <a id="guestLoginBtn" class="guest-login" href="index.html">👤 Iniciar sesión</a>
+          <a id="guestLoginBtn" class="guest-login" href="#" onclick="event.preventDefault(); openAuth('login')">👤 Iniciar sesión</a>
           <div id="userProfileBadge" class="user-profile-badge" style="display: none;">
             <img id="userAvatarImg" src="" alt="Avatar">
             <div class="up-txt">
@@ -964,6 +979,55 @@
       </div>
     </div>
   </div>
+  <!-- MODAL INICIAR SESIÓN / REGISTRARSE (mismo flujo de index.html) -->
+  <div class="modal-overlay" id="authModal" onclick="if(event.target.id==='authModal')dismissAuth()">
+    <div class="modal">
+      <button class="modal-close" type="button" onclick="dismissAuth()" aria-label="Cerrar">×</button>
+      <div class="modal-body" style="padding-top:20px">
+        <div class="auth-tabs">
+          <button class="auth-tab-btn active" id="tabLoginBtn" type="button" onclick="switchAuthTab('login')">Iniciar Sesión</button>
+          <button class="auth-tab-btn" id="tabRegisterBtn" type="button" onclick="switchAuthTab('register')">Registrarse</button>
+        </div>
+        <form id="loginForm" onsubmit="event.preventDefault(); doLogin();">
+          <p class="auth-eyebrow">Bienvenido a Sofy</p>
+          <h2 class="auth-title serif">Ingresa a tu cuenta</h2>
+          <div class="field"><label>Correo Electrónico</label><input type="email" class="input" id="loginEmail" required placeholder="tu@email.com"></div>
+          <div class="field"><label>Contraseña</label><input type="password" class="input" id="loginPassword" required placeholder="••••••••"></div>
+          <div class="field-error" id="loginError" style="margin-bottom:10px"></div>
+          <button class="btn btn-primary" type="submit" id="loginSubmitBtn">Ingresar</button>
+        </form>
+        <form id="registerForm" style="display:none" onsubmit="event.preventDefault(); doRegister();">
+          <p class="auth-eyebrow">Únete a Sofy</p>
+          <h2 class="auth-title serif">Crea tu cuenta</h2>
+          <p class="auth-notice" id="regNotice" style="display:none"></p>
+          <div class="name-row">
+            <div class="field"><label>Nombre</label><input type="text" class="input" id="regFirstName" required placeholder="Ej. Maria" autocomplete="given-name"></div>
+            <div class="field"><label>Apellido</label><input type="text" class="input" id="regLastName" required placeholder="Ej. Pérez" autocomplete="family-name"></div>
+          </div>
+          <div class="field"><label>Número de Teléfono</label><input type="tel" class="input" id="regPhone" required placeholder="Ej. 809 555 1234" autocomplete="tel" inputmode="tel"></div>
+          <div class="field">
+            <label>Selecciona tu Rol</label>
+            <div class="role-selector">
+              <label class="role-option selected" id="roleCompradorLbl"><input type="radio" name="userRole" value="comprador" checked onchange="selectRole('comprador')">🛍️ Comprador</label>
+              <label class="role-option" id="roleVendedorLbl"><input type="radio" name="userRole" value="vendedor" onchange="selectRole('vendedor')">🏪 Vendedor</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Foto de Perfil (selfie)</label>
+            <input type="file" id="regAvatarInput" accept="image/*" capture="user" style="display:none" onchange="previewAuthAvatar(event)">
+            <div class="auth-upload" onclick="document.getElementById('regAvatarInput').click()">
+              <img id="regAvatarPreview" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 24 24' fill='none' stroke='%2329b6f6' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M20 21a8 8 0 1 0-16 0'/></svg>" class="avatar-upload-preview" alt="Foto">
+              <small style="display:block;margin-top:4px">📸 Toca aquí para tomarte una selfie</small>
+            </div>
+          </div>
+          <div class="field"><label>Correo Electrónico</label><input type="email" class="input" id="regEmail" required placeholder="tu@email.com"></div>
+          <div class="field"><label>Contraseña</label><input type="password" class="input" id="regPassword" required minlength="6" placeholder="Mínimo 6 caracteres"></div>
+          <div class="field-error" id="regError" style="margin-bottom:10px"></div>
+          <button class="btn btn-primary" type="submit" id="regSubmitBtn">Crear Cuenta</button>
+        </form>
+      </div>
+    </div>
+  </div>
   <div class="toast-wrap" id="toastWrap"></div>
   <script>
   const SUPABASE_URL = 'https://jpukgeomsmwyxtqnpcsd.supabase.co';
@@ -1056,6 +1120,127 @@
     toast('Cerrando sesión…', '🚪');
     await supabaseClient.auth.signOut();
     setGuestMode();
+  }
+
+  /* ==========================================
+     MODAL INICIAR SESIÓN / REGISTRARSE (igual que index.html)
+     ========================================== */
+  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mwlpbjpq';
+  const DEFAULT_AVATAR_SVG = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 24 24' fill='none' stroke='%2329b6f6' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M20 21a8 8 0 1 0-16 0'/></svg>";
+  let regAvatarFile = null;
+  let pendingAuthAction = null;
+  async function sendFormspree(subject, data) {
+    try {
+      const userMail = data.correo || data.email || '';
+      const body = Object.assign({ '_subject': subject, '_replyto': userMail, fecha: new Date().toLocaleString('es-CO'), plataforma: 'App Sofy · Catálogo' }, data);
+      if (userMail) body._cc = userMail;
+      const r = await fetch(FORMSPREE_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body) });
+      if (!r.ok && userMail) {
+        delete body._cc;
+        const r2 = await fetch(FORMSPREE_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body) });
+        return r2.ok;
+      }
+      return r.ok;
+    } catch (err) { console.warn('No se pudo enviar el correo de confirmación:', err); return false; }
+  }
+  function switchAuthTab(type) {
+    document.getElementById('tabLoginBtn').classList.toggle('active', type === 'login');
+    document.getElementById('tabRegisterBtn').classList.toggle('active', type === 'register');
+    document.getElementById('loginForm').style.display = type === 'login' ? '' : 'none';
+    document.getElementById('registerForm').style.display = type === 'register' ? '' : 'none';
+  }
+  function openAuth(tab, pending, noticeText) {
+    pendingAuthAction = typeof pending === 'function' ? pending : null;
+    const n = document.getElementById('regNotice');
+    if (n) { n.textContent = noticeText || ''; n.style.display = noticeText ? 'block' : 'none'; }
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('regError').style.display = 'none';
+    switchAuthTab(tab || 'login');
+    openModal('authModal');
+  }
+  function dismissAuth() { closeModal('authModal'); pendingAuthAction = null; }
+  function runPendingAuth() { const fn = pendingAuthAction; pendingAuthAction = null; if (typeof fn === 'function') setTimeout(fn, 150); }
+  function selectRole(role) {
+    document.getElementById('roleCompradorLbl').classList.toggle('selected', role === 'comprador');
+    document.getElementById('roleVendedorLbl').classList.toggle('selected', role === 'vendedor');
+  }
+  function previewAuthAvatar(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    regAvatarFile = file;
+    const reader = new FileReader();
+    reader.onload = (evt) => { document.getElementById('regAvatarPreview').src = evt.target.result; };
+    reader.readAsDataURL(file);
+  }
+  function showAuthErr(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.style.display = 'block'; }
+  async function doLogin() {
+    const btn = document.getElementById('loginSubmitBtn');
+    document.getElementById('loginError').style.display = 'none';
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Ingresando…';
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    btn.disabled = false; btn.textContent = 'Ingresar';
+    if (error) { showAuthErr('loginError', 'Correo o contraseña incorrectos.'); return; }
+    await checkAuthAndLoadUser();
+    if (!currentUserProfile) { showAuthErr('loginError', 'No encontramos tu perfil. Regístrate nuevamente.'); return; }
+    closeModal('authModal');
+    document.getElementById('loginForm').reset();
+    toast('¡Bienvenido de nuevo, ' + (currentUserProfile.full_name || '').split(' ')[0] + '!', '👋');
+    runPendingAuth();
+  }
+  async function doRegister() {
+    const btn = document.getElementById('regSubmitBtn');
+    document.getElementById('regError').style.display = 'none';
+    const firstName = document.getElementById('regFirstName').value.trim();
+    const lastName = document.getElementById('regLastName').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const fullName = (firstName + ' ' + lastName).trim();
+    const role = (document.querySelector('input[name="userRole"]:checked') || { value: 'comprador' }).value;
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const fail = (msg) => { showAuthErr('regError', msg); btn.disabled = false; btn.textContent = 'Crear Cuenta'; };
+    if (!firstName) return fail('Escribe tu nombre.');
+    if (!lastName) return fail('Escribe tu apellido.');
+    if (!phone) return fail('Escribe tu número de teléfono.');
+    if (!regAvatarFile) return fail('Por favor tómate una selfie para tu foto de perfil.');
+    if (password.length < 6) return fail('La contraseña debe tener al menos 6 caracteres.');
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Creando cuenta…';
+    try { await supabaseClient.auth.signOut(); } catch (e) {}
+    const { data: authData, error: authError } = await supabaseClient.auth.signUp({ email, password });
+    if (authError || !authData.user) return fail(authError ? authError.message : 'Error al registrar usuario.');
+    if (authData.user.identities && authData.user.identities.length === 0) return fail('Este correo ya tiene una cuenta registrada. Inicia sesión para continuar.');
+    const userId = authData.user.id;
+    if (!authData.session) {
+      const { data: signInData, error: signInError } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (signInError || !signInData.user) {
+        btn.disabled = false; btn.textContent = 'Crear Cuenta';
+        sendFormspree('Nueva inscripción en Sofy · ' + role.toUpperCase(), { tipo_registro: 'Cuenta de usuario (pendiente de confirmar)', nombre: firstName, apellido: lastName, nombre_completo: fullName, telefono: phone, correo: email, email_registrado: email, rol: role, id_usuario: userId, origen: 'catalogo.html · ' + (shopData ? shopData.name : shopId) });
+        toast('Cuenta creada. Revisa tu correo ' + email + ' para confirmar e iniciar sesión.', '📧');
+        switchAuthTab('login');
+        return;
+      }
+    }
+    const fileExt = (regAvatarFile.name.split('.').pop() || 'jpg');
+    const avatarName = userId + '-' + Date.now() + '.' + fileExt;
+    const { error: uploadError } = await supabaseClient.storage.from('avatars').upload(avatarName, regAvatarFile, { upsert: true });
+    let avatarUrl = '';
+    if (!uploadError) {
+      const { data: pub } = supabaseClient.storage.from('avatars').getPublicUrl(avatarName);
+      avatarUrl = pub.publicUrl;
+    }
+    const { error: profileError } = await supabaseClient.from('profiles').upsert([{ id: userId, full_name: fullName, first_name: firstName, last_name: lastName, phone: phone, role: role, avatar_url: avatarUrl }]);
+    if (profileError) return fail('Error al guardar perfil: ' + profileError.message);
+    sendFormspree('Nueva inscripción en Sofy · ' + role.toUpperCase(), { tipo_registro: 'Cuenta de usuario', nombre: firstName, apellido: lastName, nombre_completo: fullName, telefono: phone, correo: email, email_registrado: email, rol: role, id_usuario: userId, foto_perfil: avatarUrl || 'Sin foto', origen: 'catalogo.html · ' + (shopData ? shopData.name : shopId) });
+    await checkAuthAndLoadUser();
+    btn.disabled = false; btn.textContent = 'Crear Cuenta';
+    document.getElementById('registerForm').reset();
+    document.getElementById('regAvatarPreview').src = DEFAULT_AVATAR_SVG;
+    regAvatarFile = null;
+    selectRole('comprador');
+    closeModal('authModal');
+    toast('¡Cuenta creada con éxito! Revisa tu correo de confirmación.', '🎉');
+    runPendingAuth();
   }
 
   const params = new URLSearchParams(window.location.search);
@@ -2063,6 +2248,11 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     return t;
   }
   async function openOrderConfirm() {
+    /* Sin sesión: se abre el modal de iniciar sesión / registrarse y luego continúa el pedido */
+    if (!currentUserProfile) {
+      openAuth('login', () => { openCartModal(); openOrderConfirm(); }, 'Inicia sesión o crea tu cuenta para confirmar tu pedido.');
+      return;
+    }
     let ok = true;
     $('errName').style.display = 'none'; $('orderName').classList.remove('error');
     $('errAddress').style.display = 'none'; $('orderAddress').classList.remove('error');
@@ -2181,7 +2371,7 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
           <div style="font-weight:800;font-size:.95rem">Calificación del vendedor</div>
           <small>${reviewsList.length ? reviewsList.length + (reviewsList.length === 1 ? ' reseña publicada' : ' reseñas publicadas') : 'Este comercio aún no tiene reseñas'}${reviewsSupported ? '' : ' · crea la tabla shop_reviews (SQL en Ajustes)'}</small>
         </div>
-        ${isBuyer() ? `<button class="btn btn-primary" style="width:auto;padding:11px 16px" onclick="openReviewModal()">⭐ Calificar al vendedor</button>` : (!currentUserProfile ? `<a class="btn btn-dark" style="width:auto;padding:11px 16px;text-decoration:none" href="index.html">👤 Inicia sesión para calificar</a>` : '')}
+        ${isBuyer() ? `<button class="btn btn-primary" style="width:auto;padding:11px 16px" onclick="openReviewModal()">⭐ Calificar al vendedor</button>` : (!currentUserProfile ? `<button type="button" class="btn btn-dark" style="width:auto;padding:11px 16px" onclick="openAuth('login', openReviewModal)">👤 Inicia sesión para calificar</button>` : '')}
       </div>`;
     const list = reviewsList.length ? `<div class="rev-list">${reviewsList.slice(0, 9).map((r) => `
       <div class="rev-card">
@@ -2236,7 +2426,7 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     scrollToReviews();
   }
   function openPinModal() {
-    if (!currentUserProfile) { toast('Inicia sesión desde el inicio para administrar tu catálogo', '🔐'); return; }
+    if (!currentUserProfile) { openAuth('login', openPinModal); return; }
     $('pinInput').value = '';
     $('pinError').style.visibility = 'hidden';
     $('pinError').textContent = 'Contraseña incorrecta. Inténtalo de nuevo.';
@@ -2255,8 +2445,8 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session || !session.user || !session.user.email) {
       closeModal('pinModal');
-      toast('Tu sesión expiró. Inicia sesión de nuevo desde el inicio.', '🔐');
       setGuestMode();
+      openAuth('login', openPinModal, 'Tu sesión expiró. Inicia sesión de nuevo.');
       return;
     }
     const btn = $('pinSubmitBtn');
