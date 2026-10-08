@@ -89,9 +89,6 @@
     }
     [data-theme="light"] .wrap { background: radial-gradient(900px 380px at 85% -8%, color-mix(in srgb, var(--primary) 10%, transparent), transparent 70%), var(--bg); }
     .container { max-width: 1020px; margin: 0 auto; padding: 0 16px; }
-    /* ============================================================
-       HEADER
-       ============================================================ */
     .topbar { position: sticky; top: 0; z-index: 90; background: var(--header-bg); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
     .topbar-inner { max-width: 1020px; margin: 0 auto; padding: 11px 16px 12px; display: flex; flex-direction: column; gap: 9px; }
     .hdr-row { display: flex; align-items: center; gap: 10px; width: 100%; }
@@ -111,7 +108,6 @@
     .icon-btn:hover { border-color: var(--primary-line); }
     .icon-btn .btn-label { font-size: .74rem; font-weight: 700; letter-spacing: .02em; }
     .hdr-tools .icon-btn { height: 38px; }
-    /* Hero */
     .hero { position: relative; margin: 18px 0 22px; aspect-ratio: 16/9; border-radius: 24px; overflow: hidden; background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow); touch-action: pan-y; user-select: none; -webkit-user-select: none; }
     @media (max-width: 600px) { .hero { aspect-ratio: 16/10; } }
     .hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity .7s ease; }
@@ -133,7 +129,6 @@
     .hero-swipe-hint .arr { display: inline-block; animation: nudgeR 1.1s ease-in-out infinite; }
     @keyframes nudgeR { 0%,100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
     @keyframes nudgeL { 0%,100% { transform: translateX(0); } 50% { transform: translateX(-4px); } }
-    /* Saludo y buscador */
     .greet { margin: 6px 2px 16px; }
     .kicker { display: inline-flex; align-items: center; gap: 8px; font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--primary-bright); margin-bottom: 4px; }
     .kicker::before { content: ""; width: 22px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--primary), var(--primary-bright)); }
@@ -148,7 +143,6 @@
     .pills::-webkit-scrollbar, .cat-rail::-webkit-scrollbar { display: none; }
     .pill { padding: 9px 16px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); color: var(--text); font-size: .82rem; font-weight: 600; white-space: nowrap; cursor: pointer; }
     .pill.active { background: linear-gradient(135deg, var(--primary), var(--primary-bright)); color: #fff; border-color: transparent; box-shadow: 0 8px 20px var(--primary-soft); }
-    /* Categorías */
     .cat-rail { display: flex; gap: 14px; overflow-x: auto; padding: 6px 2px 14px; margin-bottom: 6px; scrollbar-width: none; }
     .cat-chip { display: flex; flex-direction: column; align-items: center; gap: 7px; background: none; border: 0; cursor: pointer; width: 78px; flex: 0 0 auto; color: var(--text); }
     .cat-tile { width: 70px; height: 70px; border-radius: 22px; overflow: hidden; border: 2px solid var(--border); background: var(--card); transition: all .18s; display: grid; place-items: center; }
@@ -161,7 +155,6 @@
     .media-ph { width: 100%; height: 100%; display: grid; place-items: center; background: linear-gradient(135deg, var(--card-2), color-mix(in srgb, var(--primary) 22%, var(--card-2))); }
     .hero-slide .media-ph { font-size: 3rem; }
     .cat-tile .media-ph { font-size: 1.5rem; }
-    /* Secciones y productos */
     .cat-section { margin: 22px 0 6px; scroll-margin-top: 172px; }
     .cat-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 2px 12px; }
     .cat-head h3 { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px; margin: 0; }
@@ -187,7 +180,6 @@
     .badge-type.servicio { background: color-mix(in srgb, var(--warning) 85%, black); }
     .empty-state { grid-column: 1/-1; text-align: center; color: var(--muted); padding: 48px 16px; font-size: .9rem; }
     .empty-state .emoji { display: block; font-size: 2.4rem; margin-bottom: 10px; }
-    /* (3) LIGHTBOX DE IMAGEN */
     .lightbox { position: fixed; inset: 0; z-index: 1200; background: rgba(4,7,12,.92); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 18px; animation: fadeIn .18s; }
     .lightbox .lb-inner { position: relative; max-width: 960px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 14px; }
     .lightbox img, .lightbox video { max-width: 100%; max-height: 74vh; border-radius: 18px; object-fit: contain; box-shadow: 0 24px 60px rgba(0,0,0,.6); background: #000; }
@@ -198,7 +190,6 @@
     .lb-bar .lb-name { font-weight: 700; font-size: .92rem; }
     .lb-bar .lb-price { font-weight: 800; color: #fff; opacity: .9; font-size: .9rem; }
     .lb-add { border: 0; border-radius: 999px; padding: 10px 18px; font-weight: 800; font-size: .86rem; cursor: pointer; background: linear-gradient(135deg, var(--primary), var(--primary-bright)); color: #fff; display: inline-flex; align-items: center; gap: 7px; font-family: inherit; }
-    /* COLORES Y TALLAS */
     .popts { display: flex; flex-direction: column; gap: 7px; margin-top: 8px; padding-top: 9px; border-top: 1px dashed var(--border); }
     .opt-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .opt-label { font-size: .61rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); flex: 0 0 auto; }
@@ -210,7 +201,6 @@
     .size-chip { min-width: 30px; padding: 4px 9px; border-radius: 9px; border: 1px solid var(--border); background: var(--bg-soft); color: var(--text); font-size: .72rem; font-weight: 800; cursor: pointer; font-family: inherit; transition: .15s; }
     .size-chip:hover { border-color: var(--primary-line); }
     .size-chip.on { background: linear-gradient(135deg, var(--primary), var(--primary-bright)); color: #fff; border-color: transparent; box-shadow: 0 6px 14px var(--primary-soft); }
-    /* (2) Editor de variantes apilado: campo ARRIBA, botón ABAJO */
     .variant-stack { display: flex; flex-direction: column; gap: 8px; direction: ltr; }
     .variant-line { display: flex; align-items: center; gap: 8px; width: 100%; }
     .variant-line .input { flex: 1 1 auto; min-width: 0; direction: ltr; text-align: left; unicode-bidi: plaintext; }
@@ -227,7 +217,6 @@
     .quick-opts button:hover { border-color: var(--primary-line); color: var(--primary-bright); border-style: solid; }
     .variant-note { font-size: .76rem; line-height: 1.45; color: var(--muted); background: var(--bg-soft); border: 1px dashed var(--border-strong); border-radius: 12px; padding: 10px 12px; margin-bottom: 13px; }
     .variant-note b { color: var(--text); }
-    /* Flotantes */
     .float-cart { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; width: calc(100% - 32px); max-width: 480px; background: linear-gradient(135deg, #1faa54, var(--whatsapp)); color: #fff; padding: 6px 6px 6px 10px; border-radius: 999px; display: none; align-items: center; gap: 6px; box-shadow: 0 12px 30px rgba(37,211,102,.4); animation: fadeIn .2s; }
     .float-cart-main { flex: 1; min-width: 0; background: none; border: 0; color: #fff; font-weight: 700; font-size: .95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 9px; padding: 10px 8px; font-family: inherit; white-space: nowrap; }
     .float-cart .cart-ico { width: 22px; height: 22px; flex: 0 0 auto; color: #fff; stroke: #fff; display: block; }
@@ -239,7 +228,6 @@
     .float-cart-close { width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(0,0,0,.2); color: #fff; font-size: 1.15rem; font-weight: 700; cursor: pointer; display: grid; place-items: center; flex: 0 0 auto; padding: 0; line-height: 1; }
     .float-cart-close:hover { background: rgba(0,0,0,.32); }
     .float-admin { position: fixed; bottom: 22px; right: 18px; z-index: 99; background: var(--card-2); color: var(--text); border: 1px solid var(--border-strong); padding: 12px 17px; border-radius: 999px; font-weight: 600; font-size: .82rem; cursor: pointer; display: flex; align-items: center; gap: 7px; box-shadow: var(--shadow); }
-    /* Modales */
     .modal-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(5,8,14,.62); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 16px; animation: fadeIn .18s; }
     .modal { background: var(--card); border: 1px solid var(--border); border-radius: 22px; width: 100%; max-width: 460px; max-height: 92vh; overflow-y: auto; position: relative; box-shadow: var(--shadow); animation: modalPop .22s; }
     .modal.wide { max-width: 640px; }
@@ -273,7 +261,6 @@
     .qty button { width: 30px; height: 30px; border-radius: 50%; border: 0; background: var(--card-2); color: var(--text); font-weight: 800; font-size: 1rem; cursor: pointer; display: grid; place-items: center; }
     .qty button.accent { background: linear-gradient(135deg, var(--primary), var(--primary-bright)); color: #fff; }
     .qty span { min-width: 26px; text-align: center; font-weight: 700; }
-    /* Modal producto */
     .prod-hero { position: relative; aspect-ratio: 16/10; background: var(--card-2); overflow: hidden; cursor: zoom-in; }
     .prod-hero img, .prod-hero video { width: 100%; height: 100%; object-fit: cover; }
     .prod-hero .media-ph { font-size: 3.4rem; }
@@ -282,7 +269,6 @@
     .prod-info .desc { color: var(--muted); font-size: .85rem; margin-top: 6px; line-height: 1.45; }
     .prod-info .price-big { font-size: 1.5rem; font-weight: 800; color: var(--primary-bright); margin-top: 10px; }
     .obs-hint { font-size: .72rem; color: var(--muted); margin-top: 5px; line-height: 1.45; }
-    /* Carrito */
     .cart-line { display: flex; align-items: center; gap: 11px; padding: 11px 0; border-bottom: 1px solid var(--border); }
     .cart-thumb { width: 54px; height: 54px; border-radius: 14px; object-fit: cover; background: var(--card-2); flex: 0 0 auto; }
     .cart-thumb.media-ph { width: 54px; height: 54px; border-radius: 14px; font-size: 1.3rem; flex: 0 0 auto; }
@@ -310,7 +296,6 @@
     .option-card.active { border-color: var(--primary-bright); background: var(--primary-soft); box-shadow: 0 0 0 3px var(--primary-soft); }
     .pay-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
     .pay-cards .option-card { padding: 11px 6px; font-size: .74rem; }
-    /* (5)(6) Transportadoras con ícono real */
     .c-ico { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; flex: 0 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,.25); }
     .c-ico svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
     .c-ico .mono { color: #fff; font-size: .55rem; font-weight: 900; letter-spacing: .01em; }
@@ -329,10 +314,8 @@
     .carrier-pick:hover { border-color: var(--primary-line); }
     .carrier-pick.active { border-color: var(--primary-bright); background: var(--primary-soft); box-shadow: 0 0 0 3px var(--primary-soft); }
     .carrier-pick .cname { flex: 1; min-width: 0; line-height: 1.2; }
-    /* PIN / acceso administrador */
     .pin-wrap { text-align: center; padding: 26px 24px 24px; }
     .pin-input { text-align: center; font-size: 1.05rem; letter-spacing: 4px; font-weight: 700; }
-    /* Admin */
     .tabs { display: flex; gap: 6px; padding: 14px 18px 0; overflow-x: auto; scrollbar-width: none; }
     .tabs::-webkit-scrollbar { display: none; }
     .tab { padding: 9px 14px; border-radius: 12px 12px 0 0; border: 1px solid transparent; background: none; color: var(--muted); font-weight: 700; font-size: .8rem; white-space: nowrap; cursor: pointer; font-family: inherit; }
@@ -358,7 +341,6 @@
     .sub-title { font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 16px 0 7px; }
     details.sql-box { margin-top: 14px; font-size: .74rem; color: var(--muted); }
     details.sql-box pre { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 10px; overflow-x: auto; white-space: pre-wrap; }
-    /* (9)(10)(11) Modal legal / confianza */
     .trust-block { border: 1px solid var(--border); background: var(--bg-soft); border-radius: 16px; padding: 13px 14px; margin-bottom: 11px; }
     .trust-block h4 { margin: 0 0 6px; font-size: .88rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
     .trust-block p { margin: 0; font-size: .78rem; color: var(--muted); line-height: 1.5; }
@@ -387,7 +369,6 @@
     .accept-row input { width: 19px; height: 19px; accent-color: var(--primary-bright); margin-top: 1px; flex: 0 0 auto; }
     .accept-row label { font-size: .79rem; line-height: 1.45; font-weight: 600; }
     .accept-row a { color: var(--primary-bright); cursor: pointer; text-decoration: underline; }
-    /* (12) Reseñas */
     .reviews-sec { margin: 28px 0 10px; }
     .rev-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 16px 18px; }
     .rev-score { font-size: 2.1rem; font-weight: 800; line-height: 1; }
@@ -402,7 +383,6 @@
     .star-pick { display: flex; gap: 6px; justify-content: center; margin: 6px 0 4px; }
     .star-pick button { background: none; border: 0; font-size: 2rem; line-height: 1; cursor: pointer; color: #64748b; padding: 0 2px; transition: transform .12s; }
     .star-pick button.on { color: #f5b301; transform: scale(1.08); }
-    /* Toasts y confirmaciones */
     .toast-wrap { position: fixed; bottom: 92px; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; width: calc(100% - 32px); max-width: 420px; }
     .toast { background: var(--card-2); border: 1px solid var(--border-strong); color: var(--text); padding: 12px 18px; border-radius: 14px; font-size: .86rem; font-weight: 600; box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px; animation: toastIn .3s; }
     .toast .tick { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--whatsapp) 25%, transparent); color: var(--whatsapp); flex: 0 0 auto; font-size: .8rem; }
@@ -417,8 +397,6 @@
     @keyframes modalPop { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes toastIn { from { transform: translateY(14px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    /* PERFIL DE USUARIO EN BARRA SUPERIOR */
-    /* (1) Badge de perfil legible, anclado arriba a la derecha y sin empujar el contenido */
     .user-profile-badge {
       display: flex; align-items: center; gap: 8px; background: var(--card);
       border: 1px solid var(--border); padding: 4px 10px 4px 4px;
@@ -431,8 +409,9 @@
     .user-profile-badge .role-tag { font-size: 8.5px; padding: 1px 6px; border-radius: 8px; background: var(--primary-soft); color: var(--primary-bright); text-transform: uppercase; font-weight: 800; letter-spacing: .04em; max-width: 104px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; align-self: flex-start; }
     .btn-logout-cat { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 50%; width: 24px; height: 24px; color: var(--muted); cursor: pointer; padding: 0; display: grid; place-items: center; flex: 0 0 auto; }
     .btn-logout-cat:hover { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
-    /* Botón de iniciar sesión cuando se navega como invitado */
-    .btn-login-cat { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--primary), var(--primary-bright)); color: #fff; border: 0; border-radius: 999px; padding: 8px 14px; font-weight: 700; font-size: .78rem; cursor: pointer; margin-left: auto; flex: 0 0 auto; white-space: nowrap; box-shadow: 0 8px 18px var(--primary-soft); }
+    /* Botón para visitantes sin sesión */
+    .guest-login { display: none; align-items: center; gap: 6px; margin-left: auto; flex: 0 0 auto; align-self: flex-start; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); color: var(--primary-bright); font-size: .76rem; font-weight: 800; text-decoration: none; white-space: nowrap; }
+    .guest-login:hover { border-color: var(--primary-line); }
     @media (max-width: 520px) {
       .hdr-main { gap: 8px; }
       .brand-name { font-size: .86rem; }
@@ -446,7 +425,6 @@
       .user-profile-badge span { font-size: 11px; max-width: 82px; }
       .user-profile-badge .role-tag { font-size: 8px; max-width: 82px; }
       .btn-logout-cat { width: 22px; height: 22px; }
-      .btn-login-cat { padding: 7px 11px; font-size: .72rem; }
     }
     @media (max-width: 380px) {
       .brand-cat { display: none; }
@@ -468,7 +446,7 @@
               <div class="rating-badge" id="shopRatingBadge" onclick="scrollToReviews()"></div>
             </div>
           </div>
-          <!-- Badge de Perfil de Usuario -->
+          <a id="guestLoginBtn" class="guest-login" href="index.html">👤 Iniciar sesión</a>
           <div id="userProfileBadge" class="user-profile-badge" style="display: none;">
             <img id="userAvatarImg" src="" alt="Avatar">
             <div class="up-txt">
@@ -479,17 +457,12 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             </button>
           </div>
-          <!-- Botón para iniciar sesión cuando se navega como invitado -->
-          <button id="guestLoginBtn" class="btn-login-cat" style="display:none" onclick="window.location.href='index.html'">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
-            Iniciar sesión
-          </button>
         </div>
         <div class="hdr-row hdr-back">
           <a id="btnBackToShop" href="#" class="back-link">&#8592; Volver al Comercio</a>
           <div class="hdr-tools">
             <button class="icon-btn" id="themeToggleBtn" title="Cambiar tema" aria-label="Cambiar tema" onclick="toggleTheme()">🌙<span class="btn-label">Modo</span></button>
-            <button class="icon-btn" id="adminGearBtn" title="Editar catálogo" aria-label="Editar catálogo" style="display:none" onclick="openPinModal()">⚙️<span class="btn-label">Administrador</span></button>
+            <button class="icon-btn" id="adminGearBtn" title="Editar catálogo" aria-label="Editar catálogo" onclick="openPinModal()">⚙️<span class="btn-label">Administrador</span></button>
           </div>
         </div>
       </div>
@@ -514,7 +487,6 @@
       </div>
       <div class="cat-rail" id="categoriesRail"></div>
       <div id="productsContainer"></div>
-      <!-- (12) RESEÑAS Y CALIFICACIÓN DEL VENDEDOR -->
       <section class="reviews-sec" id="reviewsSection"></section>
     </main>
     <div class="float-cart" id="cartFloatBtn">
@@ -528,7 +500,6 @@
       <button class="float-cart-close" id="cartFloatToggle" title="Minimizar" aria-label="Minimizar" onclick="toggleCartButton(event)">×</button>
     </div>
   </div>
-  <!-- (3) LIGHTBOX DE IMAGEN DEL PRODUCTO -->
   <div class="lightbox" id="imageLightbox" onclick="if(event.target.id==='imageLightbox')closeLightbox()">
     <div class="lb-inner">
       <button class="lb-close" onclick="closeLightbox()" aria-label="Cerrar">×</button>
@@ -540,7 +511,6 @@
       </div>
     </div>
   </div>
-  <!-- MODAL ACCESO ADMINISTRADOR -->
   <div class="modal-overlay" id="pinModal">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('pinModal')">×</button>
@@ -555,7 +525,6 @@
       </div>
     </div>
   </div>
-  <!-- MODAL PANEL ADMIN -->
   <div class="modal-overlay" id="adminPanelModal">
     <div class="modal wide">
       <button class="modal-close" onclick="closeModal('adminPanelModal')">×</button>
@@ -567,22 +536,18 @@
         <button class="tab" data-tab="ajustes" onclick="setAdminTab('ajustes')">⚙️ Ajustes</button>
       </div>
       <div class="modal-body">
-        <!-- ÍTEMS -->
         <div id="tab-items">
           <button class="btn btn-primary" style="margin-bottom:14px" onclick="openAddProductModal()">＋ Agregar producto / servicio</button>
           <div class="admin-list" id="adminItemsList"></div>
         </div>
-        <!-- CATEGORÍAS -->
         <div id="tab-categorias" style="display:none">
           <button class="btn btn-primary" style="margin-bottom:14px" onclick="openAddCategoryModal()">＋ Nueva categoría</button>
           <div class="admin-list" id="adminCategoriesList"></div>
         </div>
-        <!-- BANNERS -->
         <div id="tab-banners" style="display:none">
           <button class="btn btn-dark" style="margin-bottom:14px" onclick="openAddBannerModal()">＋ Subir banner (imagen o video)</button>
           <div class="admin-list" id="adminBannersList"></div>
         </div>
-        <!-- AJUSTES -->
         <div id="tab-ajustes" style="display:none">
           <div class="field">
             <label>🛍️ Título para tus productos</label>
@@ -607,7 +572,6 @@
             <input type="number" min="0" class="input" id="setDelivery" placeholder="0">
             <div class="obs-hint">Se suma al total solo cuando el cliente elige “Domicilio”. En “Servicio en mesa” no se cobra.</div>
           </div>
-          <!-- (5) OPCIONES DE ENVÍO / TRANSPORTADORAS DE RD -->
           <div class="sub-title">🚚 Opciones de envío (República Dominicana)</div>
           <div class="field">
             <label>Toca las transportadoras que maneja tu comercio</label>
@@ -642,7 +606,6 @@
       </div>
     </div>
   </div>
-  <!-- MODAL PRODUCTO / SERVICIO (admin) -->
   <div class="modal-overlay" id="productModal">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('productModal')">×</button>
@@ -673,9 +636,7 @@
             <label>Descripción</label>
             <textarea class="textarea" id="prodDesc" placeholder="Detalles, ingredientes o información del servicio…"></textarea>
           </div>
-          <!-- (7) Aviso adaptado a la categoría del comercio -->
           <div class="variant-note" id="variantNote" style="display:none"></div>
-          <!-- (2)(3) COLORES DISPONIBLES -->
           <div class="field" id="colorsField">
             <label>🎨 Colores disponibles</label>
             <div class="variant-stack">
@@ -688,7 +649,6 @@
             <div class="variant-chips" id="colorChips"></div>
             <div class="obs-hint">Se muestran como muestras de color en la tarjeta del producto y en el pedido.</div>
           </div>
-          <!-- (2)(3) TALLAS DISPONIBLES -->
           <div class="field" id="sizesField">
             <label>📏 Tallas disponibles</label>
             <div class="variant-stack">
@@ -714,7 +674,6 @@
       </div>
     </div>
   </div>
-  <!-- MODAL CATEGORÍA (admin) -->
   <div class="modal-overlay" id="categoryModal">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('categoryModal')">×</button>
@@ -737,7 +696,6 @@
       </div>
     </div>
   </div>
-  <!-- MODAL BANNER (admin, imagen o video) -->
   <div class="modal-overlay" id="bannerModal">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('bannerModal')">×</button>
@@ -761,7 +719,6 @@
       </div>
     </div>
   </div>
-  <!-- MODAL PRODUCTO (cliente, con observaciones) -->
   <div class="modal-overlay" id="customerProductModal">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('customerProductModal')">×</button>
@@ -795,7 +752,6 @@
       </div>
     </div>
   </div>
-  <!-- MODAL CARRITO / CHECKOUT -->
   <div class="modal-overlay" id="cartModal">
     <div class="modal cart-modal">
       <button class="modal-close" onclick="closeModal('cartModal')">×</button>
@@ -814,7 +770,6 @@
               <span style="display:block;font-size:.68rem;opacity:.8">Sin costo de domicilio</span>
             </button>
           </div>
-          <!-- (6) TRANSPORTADORAS DEL COMERCIO -->
           <div id="carrierField" style="display:none;margin-top:12px">
             <label style="display:block;font-size:.78rem;font-weight:700;margin-bottom:6px">🚚 ¿Por dónde quieres que te lo enviemos? *</label>
             <div id="carrierOptions"></div>
@@ -866,7 +821,6 @@
       </div>
     </div>
   </div>
-  <!-- (9)(10)(11) MODAL DE POLÍTICAS Y PROTECCIÓN SOFY -->
   <div class="modal-overlay" id="policyModal">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('policyModal')">×</button>
@@ -961,7 +915,6 @@
       </div>
     </div>
   </div>
-  <!-- (12) MODAL DE RESEÑA -->
   <div class="modal-overlay" id="reviewModal">
     <div class="modal" style="max-width:420px">
       <button class="modal-close" onclick="closeModal('reviewModal')">×</button>
@@ -982,7 +935,6 @@
       </div>
     </div>
   </div>
-  <!-- MODAL CONFIRMACIÓN GENÉRICO -->
   <div class="modal-overlay" id="confirmModal">
     <div class="modal" style="max-width:380px">
       <div class="modal-body" style="text-align:center;padding-top:28px">
@@ -997,7 +949,6 @@
       </div>
     </div>
   </div>
-  <!-- MODAL ÉXITO -->
   <div class="modal-overlay" id="successModal">
     <div class="modal" style="max-width:380px">
       <div class="modal-body" style="text-align:center;padding-top:30px">
@@ -1015,34 +966,34 @@
   </div>
   <div class="toast-wrap" id="toastWrap"></div>
   <script>
-  /* ============================================================
-     CONFIGURACIÓN SUPABASE
-     ============================================================ */
   const SUPABASE_URL = 'https://jpukgeomsmwyxtqnpcsd.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwdWtnZW9tc213eXh0cW5wY3NkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMDA3MzQsImV4cCI6MjEwNDU3NjczNH0.aALmQGfEkU4YCJM_9yUGJoUYfFVSLaZe0tnOlznKm54';
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   /* ==========================================
-     VERIFICACIÓN DE SESIÓN Y ROLES EN CATÁLOGO
-     (El catálogo ahora es público: no se exige iniciar sesión
-     para verlo ni para abrir un producto desde index.html)
+     SESIÓN OPCIONAL: el catálogo se puede ver sin iniciar sesión.
+     Solo se habilitan administración y calificación con sesión.
      ========================================== */
   let currentUserProfile = null;
 
-  async function checkAuthAndLoadUser() {
+  function setGuestMode() {
+    currentUserProfile = null;
     const adminGearBtn = document.getElementById('adminGearBtn');
+    if (adminGearBtn) adminGearBtn.style.display = 'none';
     const profileBadge = document.getElementById('userProfileBadge');
-    const guestLoginBtn = document.getElementById('guestLoginBtn');
-    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (profileBadge) profileBadge.style.display = 'none';
+    const guestBtn = document.getElementById('guestLoginBtn');
+    if (guestBtn) guestBtn.style.display = 'inline-flex';
+    applyReviewPermissions();
+    if (shopData) renderReviews();
+  }
 
-    if (!session) {
-      currentUserProfile = null;
-      if (profileBadge) profileBadge.style.display = 'none';
-      if (adminGearBtn) adminGearBtn.style.display = 'none';
-      if (guestLoginBtn) guestLoginBtn.style.display = 'inline-flex';
-      applyReviewPermissions();
-      if (shopData) renderReviews();
-      return;
-    }
+  async function checkAuthAndLoadUser() {
+    let session = null;
+    try {
+      const res = await supabaseClient.auth.getSession();
+      session = res && res.data ? res.data.session : null;
+    } catch (e) { session = null; }
+    if (!session) { setGuestMode(); return; }
 
     const { data, error } = await supabaseClient
       .from('profiles')
@@ -1050,45 +1001,40 @@
       .eq('id', session.user.id)
       .single();
 
-    if (error || !data) {
-      currentUserProfile = null;
-      if (profileBadge) profileBadge.style.display = 'none';
-      if (adminGearBtn) adminGearBtn.style.display = 'none';
-      if (guestLoginBtn) guestLoginBtn.style.display = 'inline-flex';
-      applyReviewPermissions();
-      if (shopData) renderReviews();
-      return;
-    }
+    if (error || !data) { setGuestMode(); return; }
 
     currentUserProfile = data;
-    if (guestLoginBtn) guestLoginBtn.style.display = 'none';
 
     const avatarImg = document.getElementById('userAvatarImg');
     const nameTxt = document.getElementById('userNameTxt');
     const roleTxt = document.getElementById('userRoleTxt');
+    const profileBadge = document.getElementById('userProfileBadge');
+    const guestBtn = document.getElementById('guestLoginBtn');
 
     if (avatarImg) avatarImg.src = data.avatar_url || 'https://via.placeholder.com/30';
     if (nameTxt) nameTxt.textContent = (data.full_name || 'Usuario').split(' ')[0];
     if (roleTxt) roleTxt.textContent = (data.role || '').toUpperCase();
     if (profileBadge) profileBadge.style.display = 'flex';
+    if (guestBtn) guestBtn.style.display = 'none';
 
-    /* Autocompletar nombre del pedido y de la reseña */
     if (data.full_name) {
       const on = document.getElementById('orderName');
       if (on && !on.value) { on.value = data.full_name; order.customerName = data.full_name; }
       const rn = document.getElementById('reviewName');
       if (rn && !rn.value) rn.value = data.full_name;
     }
+    if (data.phone) {
+      const op = document.getElementById('orderPhone');
+      if (op && !op.value) { op.value = data.phone; order.phone = data.phone; }
+    }
 
-    // Solo los vendedores con sesión activa ven el botón de administración de catálogo (⚙️)
-    if (adminGearBtn) adminGearBtn.style.display = (data.role === 'vendedor') ? '' : 'none';
+    const adminGearBtn = document.getElementById('adminGearBtn');
+    if (adminGearBtn) adminGearBtn.style.display = data.role === 'comprador' ? 'none' : '';
 
-    /* (2) Solo el comprador puede calificar; las reseñas se ven para todos */
     applyReviewPermissions();
     if (shopData) renderReviews();
   }
 
-  /* (2) ¿El usuario actual puede calificar? Solo el rol comprador */
   function isBuyer() {
     return !!(currentUserProfile && String(currentUserProfile.role || '').toLowerCase() === 'comprador');
   }
@@ -1097,28 +1043,23 @@
     if (b) b.style.display = isBuyer() ? '' : 'none';
   }
 
-  /* (1) Cerrar sesión con alerta independiente (sin mostrar el dominio) */
   async function logoutUser() {
     const ok = await confirmDialog({
       icon: '🚪',
       danger: true,
       title: '¿Cerrar sesión?',
-      message: 'Vas a salir de tu cuenta. Tendrás que iniciar sesión nuevamente para volver a entrar.',
+      message: 'Vas a salir de tu cuenta. Podrás seguir viendo el catálogo como visitante.',
       confirmText: 'Sí, cerrar sesión',
       cancelText: 'Quedarme aquí'
     });
     if (!ok) return;
     toast('Cerrando sesión…', '🚪');
     await supabaseClient.auth.signOut();
-    currentUserProfile = null;
-    await checkAuthAndLoadUser();
-    toast('Sesión cerrada', '👋');
+    setGuestMode();
   }
 
-  checkAuthAndLoadUser();
   const params = new URLSearchParams(window.location.search);
   const shopId = params.get('id');
-  const productParam = params.get('producto');
   const SQL_HINT = `create table if not exists shop_categories (
   id uuid primary key default gen_random_uuid(),
   business_id text not null,
@@ -1155,9 +1096,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
   const DEFAULT_PRODUCTS_TITLE = 'Pon aquí un título para tus productos';
   const DEFAULT_SERVICES_TITLE = 'Pon aquí un título para tus servicios';
   const HERO_IMAGE_MS = 4000;
-  /* ============================================================
-     (5)(6) TRANSPORTADORAS DE REPÚBLICA DOMINICANA CON ÍCONO REAL
-     ============================================================ */
   const SVG_MOTO = '<svg viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="2.6"/><circle cx="18.5" cy="17" r="2.6"/><path d="M8 17h7l-2.4-6H9.5M12.6 11l2.9-4h3.1"/></svg>';
   const SVG_STORE = '<svg viewBox="0 0 24 24"><path d="M4 10v9h16v-9"/><path d="M3.2 5h17.6l1.2 5H2z"/><path d="M10 19v-5h4v5"/></svg>';
   const SVG_MAIL = '<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="m3.5 8 8.5 5.5L20.5 8"/></svg>';
@@ -1205,7 +1143,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     return `<span class="c-ico" style="background:${meta.bg}">${inner}</span>`;
   }
   const QUICK_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '38', '40', 'Único'];
-  /* Estado general */
   let shopData = null;
   let productsList = [];
   let bannersList = [];
@@ -1221,27 +1158,19 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
   let heroIndex = 0;
   let heroTimer = null;
   let heroSignature = null;
-  /* Variantes del formulario de ítem */
   let formColors = [];
   let formSizes = [];
   let productSelections = {};
-  /* Opciones de envío del comercio */
   let carrierCatalog = DR_CARRIERS.slice();
   let selectedCarriers = [];
-  /* Carrito y checkout */
   let cart = [];
   let cartBtnMinimized = false;
   const order = { mode: 'domicilio', customerName: '', phone: '', address: '', tableNumber: '', pay: 'efectivo', walletName: '', carrier: '', note: '' };
-  /* Modal de producto del cliente */
   let custProduct = null;
   let custQty = 1;
   let custLineId = null;
-  /* Lightbox y reseñas */
   let lightboxProductId = null;
   let reviewStars = 5;
-  /* Producto a abrir automáticamente al llegar desde index.html (?producto=) */
-  let pendingProductId = productParam || null;
-  /* Utilidades */
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const money = (n) => '$' + Number(n || 0).toLocaleString('es-CO');
@@ -1251,7 +1180,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     return Array.from(document.querySelectorAll('.modal-overlay')).some((o) => o.style.display === 'flex')
       || $('imageLightbox').style.display === 'flex';
   }
-  /* Toasts */
   function toast(message, icon = '✅') {
     const el = document.createElement('div');
     el.className = 'toast';
@@ -1260,7 +1188,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(10px)'; el.style.transition = 'all .3s'; }, 3000);
     setTimeout(() => el.remove(), 3400);
   }
-  /* Confirmación personalizada (sin mostrar dominio) */
   function confirmDialog(opts) {
     return new Promise((resolve) => {
       $('confirmTitle').textContent = opts.title || '¿Confirmar?';
@@ -1286,9 +1213,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     $('productsContainer').innerHTML =
       `<div class="empty-state"><span class="emoji">⚠️</span>${esc(message)}<br><span style="font-size:.78rem">Agrega ?id=TU_BUSINESS_ID en la URL.</span></div>`;
   }
-  /* ============================================================
-     COLORES Y TALLAS — utilidades
-     ============================================================ */
   function safeHex(h, fallback) {
     const v = String(h || '').trim();
     return /^#[0-9a-fA-F]{3,8}$/.test(v) ? v : (fallback || '#94a0b5');
@@ -1319,7 +1243,7 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
         const arr = Array.isArray(j) ? j : Object.values(j);
         const out = arr.map(normalizeColor).filter(Boolean);
         if (out.length) return out;
-      } catch (e) { /* no era JSON */ }
+      } catch (e) { }
     }
     return txt.split(',').map(normalizeColor).filter(Boolean);
   }
@@ -1332,7 +1256,7 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
       try {
         const j = JSON.parse(txt);
         if (Array.isArray(j)) return j.map((s) => String(s).trim()).filter(Boolean);
-      } catch (e) { /* no era JSON */ }
+      } catch (e) { }
     }
     return txt.split(',').map((s) => s.trim()).filter(Boolean);
   }
@@ -1373,7 +1297,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     const c = productColors(p).find((x) => x.name === name);
     return c ? safeHex(c.hex) : null;
   }
-  /* Delegación de clics */
   document.addEventListener('click', (e) => {
     const opt = e.target.closest ? e.target.closest('[data-opt]') : null;
     if (opt) {
@@ -1413,9 +1336,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
       renderCarrierList();
     }
   });
-  /* ============================================================
-     INICIALIZACIÓN
-     ============================================================ */
   async function initCatalog() {
     if (!shopId) { showFatal('No se especificó un negocio.'); return; }
     $('btnBackToShop').href = `negocio.html?id=${encodeURIComponent(shopId)}`;
@@ -1426,14 +1346,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     } catch (e) { cart = []; }
     bindHeroSwipe();
     await loadAll(true);
-    /* Si llegamos desde index.html con ?producto=ID, abrimos ese producto automáticamente */
-    if (pendingProductId) {
-      const p = productsList.find((x) => String(x.id) === String(pendingProductId));
-      if (p) {
-        setTimeout(() => openCustomerProduct(p.id), 150);
-      }
-      pendingProductId = null;
-    }
     $('searchInput').addEventListener('input', onSearchInput);
     $('pinInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); verifyAdminPin(); } });
     $('orderName').addEventListener('input', () => { order.customerName = $('orderName').value; $('errName').style.display = 'none'; $('orderName').classList.remove('error'); });
@@ -1459,13 +1371,16 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     return { id: b.id, title: b.title || '', mediaUrl: url, mediaType: type };
   }
   async function loadAll(initial) {
-    /* Negocio */
-    const { data: shop, error: shopErr } = await supabaseClient
-      .from('shops').select('*').eq('business_id', shopId).single();
+    /* Negocio: se busca por business_id y, si no existe, por id */
+    let { data: shop, error: shopErr } = await supabaseClient
+      .from('shops').select('*').eq('business_id', shopId).maybeSingle();
+    if ((shopErr || !shop)) {
+      const alt = await supabaseClient.from('shops').select('*').eq('id', shopId).maybeSingle();
+      if (!alt.error && alt.data) { shop = alt.data; shopErr = null; }
+    }
     if (shopErr || !shop) { if (initial) showFatal('Comercio no encontrado.'); return; }
     shopData = shop;
     applyShopTheme();
-    /* Categorías */
     const catRes = await supabaseClient.from('shop_categories')
       .select('*').eq('business_id', shopId).order('sort_order', { ascending: true });
     if (catRes.error) {
@@ -1476,15 +1391,12 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
       categoriesSupported = true;
       categoriesList = catRes.data || [];
     }
-    /* Productos */
     const { data: prods } = await supabaseClient
       .from('shop_products').select('*').eq('business_id', shopId).order('created_at', { ascending: false });
     productsList = prods || [];
-    /* Banners */
     const { data: bans } = await supabaseClient
       .from('shop_banners').select('*').eq('business_id', shopId).order('created_at', { ascending: true });
     bannersList = (bans || []).map(normBanner);
-    /* Reseñas */
     const revRes = await supabaseClient.from('shop_reviews')
       .select('*').eq('business_id', shopId).order('created_at', { ascending: false }).limit(60);
     if (revRes.error) { reviewsSupported = false; reviewsList = []; }
@@ -1530,9 +1442,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     applyBizCopy();
     applyDeliveryAvailability();
   }
-  /* ============================================================
-     HERO / BANNERS
-     ============================================================ */
   function mediaHtml(url, type, emoji, cls) {
     if (!url) return `<div class="${cls || ''} media-ph">${emoji || '🍽️'}</div>`;
     const isVideo = type === 'video' || /\.mp4($|\?)/i.test(url) || url.startsWith('data:video');
@@ -1626,9 +1535,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     el.addEventListener('mouseleave', () => { startX = null; startY = null; });
     el.addEventListener('dragstart', (e) => e.preventDefault());
   }
-  /* ============================================================
-     FILTROS Y CATEGORÍAS
-     ============================================================ */
   function categoryNames() {
     if (categoriesSupported && categoriesList.length) return categoriesList.map((c) => c.name);
     return [...new Set(productsList.map((p) => p.category).filter(Boolean))];
@@ -1736,9 +1642,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
         </div>
       </section>`).join('');
   }
-  /* ============================================================
-     (3) LIGHTBOX DE IMAGEN
-     ============================================================ */
   function openLightbox(prodId) {
     const p = productsList.find((x) => x.id === prodId);
     if (!p) return;
@@ -1755,11 +1658,7 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     $('imageLightbox').style.display = 'flex';
   }
   function closeLightbox() { $('imageLightbox').style.display = 'none'; $('lbMedia').innerHTML = ''; }
-  /* Ampliar la imagen desde el modal del producto */
   function zoomCurrentProduct() { if (custProduct) openLightbox(custProduct.id); }
-  /* ============================================================
-     MODAL DE PRODUCTO PARA EL CLIENTE + OBSERVACIONES
-     ============================================================ */
   function openCustomerProduct(prodId, lineId) {
     const p = productsList.find((x) => x.id === prodId);
     if (!p) return;
@@ -1836,9 +1735,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     closeModal('customerProductModal');
     updateCartUI();
   }
-  /* ============================================================
-     CARRITO
-     ============================================================ */
   function persistCart() {
     try { localStorage.setItem('cart_' + shopId, JSON.stringify(cart)); } catch (e) {}
   }
@@ -1876,7 +1772,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     const line = cart.find((l) => l.lineId === lineId);
     if (line) openCustomerProduct(line.productId, lineId);
   }
-  /* (4) Eliminar un producto del pedido */
   async function removeCartLine(lineId) {
     const line = cart.find((l) => l.lineId === lineId);
     if (!line) return;
@@ -1954,13 +1849,9 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
       .toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     return /(restaur|comida|cafe|gastro|pizz|hamburg|burger|asadero|parrill|asados|food|panader|pasteler|reposter|helader|sushi|marisc|bistro|pollo|broaster|arepa|empanad|taquer|tacos|brunch|coctel|cervec|jugos|juguer|fruteria|postre|donas|\bwok\b|grill|steak|pescad|cevich|kebab|shawarma|crepe|waffle|snack|almuerzo|corrientazo|fonda|piqueteadero|hot ?dog|\bbar\b|\bpub\b|discoteca|licorera|cocina|salsamentaria|charcuter|lonchera|chuzo|fritanga|picada|mexican|italian|china|oriental|peruan|vegan|vegetarian)/.test(txt);
   }
-  /* ============================================================
-     (7) CAMPOS DE VARIANTES ADAPTADOS A LA CATEGORÍA DEL COMERCIO
-     ============================================================ */
   function normTxt(s) {
     return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
-  /* Clasificación del gremio del comercio para adaptar TODOS los textos sugeridos */
   function bizKind() {
     const txt = normTxt((shopData && shopData.category) + ' ' + (shopData && shopData.name));
     const test = (re) => re.test(txt);
@@ -2001,7 +1892,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
   };
   function bizCopy() { return BIZ_COPY[bizKind()] || BIZ_COPY.retail; }
   function setPh(id, value) { const el = $(id); if (el && value) el.placeholder = value; }
-  /* Aplica todas las sugerencias de los campos de texto según el gremio */
   function applyBizCopy() {
     if (!shopData) return;
     const c = bizCopy();
@@ -2024,31 +1914,24 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
   function bizVariantProfile() {
     const txt = normTxt((shopData && shopData.category) + ' ' + (shopData && shopData.name));
     const test = (re) => re.test(txt);
-    /* Alimentos, bebidas y proveeduría → sin colores ni tallas */
     if (test(/(restaur|comida|cafeter|\bcafe\b|gastro|pizz|hamburg|burger|asader|parrill|food|panader|pasteler|reposter|helader|sushi|marisc|bistro|pollo|broaster|arepa|empanad|taquer|tacos|brunch|coctel|cervec|jugos|juguer|fruteria|fruver|verduler|postre|donas|grill|steak|pescad|cevich|kebab|shawarma|crepe|waffle|snack|almuerzo|fonda|hot ?dog|\bbar\b|\bpub\b|discotec|licorer|cocina|salsamentar|charcuter|fritanga|picada|supermercad|minimercad|colmad|abarrot|bodeg[oó]n|carnicer|pescader|deposito|agua|bebida|proveedur|catering|dulcer|vinos|farmac|botica|drogueria)/)) {
       return { colors: false, sizes: false, label: 'alimentos, bebidas y proveeduría', note: 'Tu comercio pertenece al gremio de <b>alimentos, bebidas y proveeduría</b>, por eso <b>los campos de colores y tallas no son necesarios</b> y se ocultan automáticamente.' };
     }
-    /* Mascotas → colores sí, tallas no */
     if (test(/(petshop|pet ?shop|mascota|veterinar|animal|canin|felin|agroveterinar)/)) {
       return { colors: true, sizes: false, label: 'mascotas', note: 'Tu comercio es de <b>mascotas</b>: se habilitan los <b>colores disponibles</b> (collares, camas, juguetes) y <b>las tallas no son necesarias</b>.' };
     }
-    /* Moda, calzado y deportes → colores y tallas */
     if (test(/(ropa|moda|boutique|textil|calzad|zapat|tenis|sneaker|deportiv|deporte|gym|uniform|lencer|pijam|infantil|bebe|maternid|sastrer|jean|camiser)/)) {
       return { colors: true, sizes: true, label: 'moda y calzado', note: 'Tu comercio es de <b>moda y calzado</b>: se habilitan <b>colores y tallas</b> para que el cliente elija su variante.' };
     }
-    /* Joyería y accesorios → colores y tallas (anillos) */
     if (test(/(joyer|bisuter|accesori|relojer|optic|gafas|lentes)/)) {
       return { colors: true, sizes: true, label: 'joyería y accesorios', note: 'Tu comercio es de <b>joyería y accesorios</b>: se habilitan <b>colores</b> y <b>tallas</b> (útil para anillos y pulseras).' };
     }
-    /* Tecnología, hogar, ferretería, belleza, papelería → solo colores */
     if (test(/(tecnolog|electro|celular|computad|informatic|hogar|mueble|decorac|ferreter|construc|hardware|bellez|cosmetic|peluquer|barber|spa|papeler|libreria|jugueter|bicicle|repuesto|auto|moto|llanter|planta|vivero|floris|artesan)/)) {
       return { colors: true, sizes: false, label: 'retail y hogar', note: 'Según tu categoría se habilitan los <b>colores disponibles</b>. <b>Las tallas no son necesarias</b> para este tipo de comercio.' };
     }
-    /* Servicios profesionales, salud, educación → ninguno */
     if (test(/(servicio|consultor|asesor|abogad|contab|salud|clinic|medic|odontolog|laborator|educac|academ|curso|escuela|instituto|transporte|mudanza|limpiez|lavander|inmobil|seguro|turism|viaje|hotel|evento|fotograf|publicid|imprenta|tecnic|reparacion|mantenimiento)/)) {
       return { colors: false, sizes: false, label: 'servicios', note: 'Tu comercio ofrece <b>servicios</b>: <b>los colores y las tallas no son necesarios</b>, por eso se ocultan.' };
     }
-    /* Comercio y retail general → ambos */
     return { colors: true, sizes: true, label: 'comercio y retail', note: 'Tu comercio pertenece a <b>comercio y retail</b>: puedes usar <b>colores y tallas</b> si tus productos lo requieren (son opcionales).' };
   }
   function applyVariantFields() {
@@ -2056,16 +1939,8 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     $('colorsField').style.display = prof.colors ? '' : 'none';
     $('sizesField').style.display = prof.sizes ? '' : 'none';
     const note = $('variantNote');
-    if (!prof.colors && !prof.sizes) {
-      note.innerHTML = '🧾 ' + prof.note;
-      note.style.display = 'block';
-    } else if (!prof.colors || !prof.sizes) {
-      note.innerHTML = '🧾 ' + prof.note;
-      note.style.display = 'block';
-    } else {
-      note.innerHTML = '🧾 ' + prof.note;
-      note.style.display = 'block';
-    }
+    note.innerHTML = '🧾 ' + prof.note;
+    note.style.display = 'block';
     if (!prof.colors) formColors = [];
     if (!prof.sizes) formSizes = [];
   }
@@ -2075,7 +1950,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     $('deliveryOptions').classList.toggle('single', !food);
     if (!food && order.mode === 'mesa') setDeliveryMode('domicilio');
   }
-  /* (6) Opciones de envío configuradas por el comercio */
   function parseShipping(raw) {
     if (!raw) return [];
     if (Array.isArray(raw)) return raw.map((s) => String(s).trim()).filter(Boolean);
@@ -2085,7 +1959,7 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
       try {
         const j = JSON.parse(txt);
         if (Array.isArray(j)) return j.map((s) => String(s).trim()).filter(Boolean);
-      } catch (e) { /* no era JSON */ }
+      } catch (e) { }
     }
     return txt.split(',').map((s) => s.trim()).filter(Boolean);
   }
@@ -2142,7 +2016,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     if (c.size) t += '   📏 Talla: ' + c.size + '\n';
     return t;
   }
-  /* (8) Mensaje de WhatsApp con TODA la información del panel */
   function buildWhatsAppText() {
     const subtotal = cart.reduce((a, c) => a + c.price * c.qty, 0);
     const fee = order.mode === 'domicilio' ? deliveryFee() : 0;
@@ -2189,7 +2062,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     t += '¡Gracias por su pedido! 🙏';
     return t;
   }
-  /* (9) Al presionar "Confirmar y enviar" → modal de políticas */
   async function openOrderConfirm() {
     let ok = true;
     $('errName').style.display = 'none'; $('orderName').classList.remove('error');
@@ -2268,9 +2140,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     $('successModal').style.display = 'flex';
     toast('Pedido enviado por WhatsApp', '💬');
   }
-  /* ============================================================
-     (12) RESEÑAS Y CALIFICACIÓN DEL VENDEDOR
-     ============================================================ */
   function avgRating() {
     if (!reviewsList.length) return 0;
     return reviewsList.reduce((a, r) => a + Number(r.rating || 0), 0) / reviewsList.length;
@@ -2312,7 +2181,7 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
           <div style="font-weight:800;font-size:.95rem">Calificación del vendedor</div>
           <small>${reviewsList.length ? reviewsList.length + (reviewsList.length === 1 ? ' reseña publicada' : ' reseñas publicadas') : 'Este comercio aún no tiene reseñas'}${reviewsSupported ? '' : ' · crea la tabla shop_reviews (SQL en Ajustes)'}</small>
         </div>
-        ${isBuyer() ? `<button class="btn btn-primary" style="width:auto;padding:11px 16px" onclick="openReviewModal()">⭐ Calificar al vendedor</button>` : ''}
+        ${isBuyer() ? `<button class="btn btn-primary" style="width:auto;padding:11px 16px" onclick="openReviewModal()">⭐ Calificar al vendedor</button>` : (!currentUserProfile ? `<a class="btn btn-dark" style="width:auto;padding:11px 16px;text-decoration:none" href="index.html">👤 Inicia sesión para calificar</a>` : '')}
       </div>`;
     const list = reviewsList.length ? `<div class="rev-list">${reviewsList.slice(0, 9).map((r) => `
       <div class="rev-card">
@@ -2333,7 +2202,7 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
   }
   function setReviewStars(n) { reviewStars = n; renderStarPick(); }
   function openReviewModal() {
-    if (!isBuyer()) { toast('Solo los compradores pueden calificar al vendedor', '⚠️'); return; }
+    if (!isBuyer()) { toast('Solo los compradores con sesión pueden calificar al vendedor', '⚠️'); return; }
     reviewStars = 5;
     renderStarPick();
     if (currentUserProfile && currentUserProfile.full_name && !$('reviewName').value) {
@@ -2366,15 +2235,8 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     await loadAll(false);
     scrollToReviews();
   }
-  /* ============================================================
-     ACCESO ADMINISTRADOR — contraseña de registro
-     ============================================================ */
   function openPinModal() {
-    if (!currentUserProfile) {
-      toast('Inicia sesión como vendedor para administrar este catálogo', '🔒');
-      setTimeout(() => { window.location.href = 'index.html'; }, 900);
-      return;
-    }
+    if (!currentUserProfile) { toast('Inicia sesión desde el inicio para administrar tu catálogo', '🔐'); return; }
     $('pinInput').value = '';
     $('pinError').style.visibility = 'hidden';
     $('pinError').textContent = 'Contraseña incorrecta. Inténtalo de nuevo.';
@@ -2393,7 +2255,8 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session || !session.user || !session.user.email) {
       closeModal('pinModal');
-      window.location.href = 'index.html';
+      toast('Tu sesión expiró. Inicia sesión de nuevo desde el inicio.', '🔐');
+      setGuestMode();
       return;
     }
     const btn = $('pinSubmitBtn');
@@ -2447,7 +2310,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     openModal('adminPanelModal');
   }
   function renderAdminLists() {
-    /* Ítems */
     $('adminItemsList').innerHTML = productsList.length ? productsList.map((p) => {
       const cs = productColors(p);
       const ss = productSizes(p);
@@ -2466,7 +2328,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
         <button class="icon-sm del" onclick="deleteProduct('${p.id}')" title="Eliminar">🗑️</button>
       </div>`;
     }).join('') : `<div class="empty-state" style="padding:24px 8px">No hay ítems todavía.</div>`;
-    /* Categorías */
     $('adminCategoriesList').innerHTML = categoriesSupported
       ? (categoriesList.length ? categoriesList.map((c) => `
         <div class="admin-row">
@@ -2480,7 +2341,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
         </div>`).join('') : `<div class="empty-state" style="padding:24px 8px">No hay categorías todavía.<br>Crea al menos una categoría para poder agregar ítems.</div>`)
       : `<div class="empty-state" style="padding:24px 8px">Crea la tabla <b>shop_categories</b> en Supabase (mira el SQL en Ajustes).</div>`;
     updateItemsTabVisibility();
-    /* Banners */
     $('adminBannersList').innerHTML = bannersList.length ? bannersList.map((b) => `
       <div class="admin-row">
         ${mediaHtml(b.mediaUrl, b.mediaType, '🖼️')}
@@ -2507,7 +2367,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     $('otherCarrierBox').style.display = 'none';
     renderCarrierList();
   }
-  /* ---------------- (2) Colores y tallas: editor del formulario ---------------- */
   function renderVariantEditors() {
     $('colorChips').innerHTML = formColors.map((c, i) => `
       <span class="vchip"><span class="dot" style="background:${safeHex(c.hex)}"></span>${esc(c.name)}
@@ -2543,7 +2402,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     renderVariantEditors();
   }
   function removeColorOption(i) { formColors.splice(i, 1); renderVariantEditors(); }
-  /* ---------------- (5) Transportadoras: editor de Ajustes ---------------- */
   function renderCarrierList() {
     const box = $('carrierList');
     if (!box) return;
@@ -2567,7 +2425,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     renderCarrierList();
     toast('Opción agregada y seleccionada: ' + val, '🚚');
   }
-  /* ---------------- Productos / servicios ---------------- */
   function resetProductForm() {
     $('editProductId').value = '';
     $('prodType').value = 'producto';
@@ -2672,7 +2529,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     await loadAll(false);
     renderAdminLists();
   }
-  /* ---------------- Categorías ---------------- */
   function resetCategoryForm() {
     $('editCategoryId').value = '';
     $('catName').value = '';
@@ -2741,7 +2597,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     await loadAll(false);
     renderAdminLists();
   }
-  /* ---------------- Banners (imagen o video) ---------------- */
   function resetBannerForm() {
     $('editBannerId').value = '';
     $('bannerTitle').value = '';
@@ -2817,7 +2672,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     await loadAll(false);
     renderAdminLists();
   }
-  /* ---------------- Ajustes del negocio ---------------- */
   async function saveSettings() {
     const payload = {
       whatsapp: $('setWhatsapp').value.trim(),
@@ -2859,11 +2713,6 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
     await loadAll(false);
     renderCarrierOptions();
   }
-  /* ============================================================
-     LIMPIEZA DE MEDIOS EN SUPABASE STORAGE
-     Cada vez que el administrador elimina o reemplaza una imagen
-     o un video, el archivo se borra del bucket para ahorrar espacio.
-     ============================================================ */
   function parseStoragePath(url) {
     if (!url || typeof url !== 'string') return null;
     if (url.startsWith('data:')) return null;
@@ -2888,14 +2737,10 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
       return true;
     } catch (e) { return false; }
   }
-  /* Borra el archivo anterior cuando se reemplaza por uno nuevo */
   async function replaceStorageMedia(oldUrl, newUrl) {
     if (!oldUrl || oldUrl === newUrl) return false;
     return await deleteStorageMedia(oldUrl);
   }
-  /* ============================================================
-     SUBIDA DE ARCHIVOS
-     ============================================================ */
   function showPreview(imgId, src, type) {
     const el = $(imgId);
     if (!el) return;
@@ -2960,6 +2805,7 @@ create policy "rev_all" on shop_reviews for all using (true) with check (true);`
       });
     }
   }
+  checkAuthAndLoadUser();
   initCatalog();
   </script>
 </body>
