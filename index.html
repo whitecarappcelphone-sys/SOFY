@@ -836,13 +836,31 @@ async function fetchShops(){
 }
 
 const PRODUCT_TABLES=['products','productos','catalog_products','shop_products','catalogo','catalog','product','items'];
+const PRODUCT_CFG_KEY='sofy_product_cfg_v1';
 let productCfg=null;
 function pickKey(row,cands){return cands.find(k=>Object.prototype.hasOwnProperty.call(row,k))||null}
+/* Caché en localStorage: tras la primera detección, las siguientes cargas son instantáneas */
+function loadCachedProductCfg(){
+  try{
+    const raw=localStorage.getItem(PRODUCT_CFG_KEY);
+    if(!raw)return null;
+    const parsed=JSON.parse(raw);
+    if(parsed&&parsed.table)return parsed;
+  }catch(e){}
+  return null;
+}
+function saveCachedProductCfg(cfg){
+  try{localStorage.setItem(PRODUCT_CFG_KEY,JSON.stringify(cfg))}catch(e){}
+}
 async function detectProducts(){
   if(productCfg)return productCfg;
+  /* (1) Intentar primero desde caché para cargar al instante */
+  const cached=loadCachedProductCfg();
+  if(cached){productCfg=cached;return productCfg}
   let emptyTable=null;
-  for(const t of PRODUCT_TABLES){
-    const { data, error } = await _supabase.from(t).select('*').limit(1);
+  /* Consultar todas las tablas candidatas en paralelo para acelerar */
+  const results=await Promise.all(PRODUCT_TABLES.map(t=>_supabase.from(t).select('*').limit(1).then(r=>({t,data:r.data,error:r.error}))));
+  for(const {t,data,error} of results){
     if(error)continue;
     if(!data||!data.length){ if(!emptyTable)emptyTable=t; continue; }
     const row=data[0];
@@ -854,9 +872,9 @@ async function detectProducts(){
       bid:pickKey(row,['business_id','shop_id','store_id','negocio_id','id_negocio','seller_id','vendedor_id','id_tienda']),
       cat:pickKey(row,['category','categoria','tipo','category_name'])
     };
-    if(cfg.image||cfg.name||cfg.price){productCfg=cfg;return cfg}
+    if(cfg.image||cfg.name||cfg.price){productCfg=cfg;saveCachedProductCfg(cfg);return cfg}
   }
-  if(emptyTable){productCfg={table:emptyTable,name:'name',ref:null,price:'price',image:'image',bid:'business_id',cat:null};return productCfg}
+  if(emptyTable){productCfg={table:emptyTable,name:'name',ref:null,price:'price',image:'image',bid:'business_id',cat:null};saveCachedProductCfg(productCfg);return productCfg}
   return null;
 }
 function buildShopMap(){const m={};shops.forEach(s=>shopKeys(s).forEach(k=>m[k]=s.name));return m}
@@ -919,13 +937,26 @@ function productBid(p){
   if(bid){const s=shops.find(x=>shopKeys(x).includes(String(bid)));if(s&&s.business_id)bid=String(s.business_id)}
   return bid;
 }
+/* (2) URL con múltiples nombres de parámetro para máxima compatibilidad con catalogo.html */
 function productHref(p){
   const bid=productBid(p);
   const pid=p._id||'';
   const params=[];
   if(bid)params.push('id='+encodeURIComponent(bid));
-  if(pid)params.push('pid='+encodeURIComponent(pid));
+  if(pid){
+    params.push('pid='+encodeURIComponent(pid));
+    params.push('product_id='+encodeURIComponent(pid));
+    params.push('producto='+encodeURIComponent(pid));
+  }
   return 'catalogo.html'+(params.length?'?'+params.join('&'):'');
+}
+/* (2) Guardar contexto del producto para que catalogo.html abra la tarjeta ampliada al instante */
+function storeProductContext(p){
+  try{
+    const bid=productBid(p);
+    const ctx={pid:p._id||'',bid:bid||'',name:p._name||'',ref:p._ref||'',price:p._price||'',img:p._img||'',shop:p._shop||'',ts:Date.now()};
+    sessionStorage.setItem('sofy_open_product',JSON.stringify(ctx));
+  }catch(e){}
 }
 
 /* (4) Búsqueda inline: campo único arriba del grid de productos */
@@ -978,13 +1009,17 @@ function bindInlineSearch(){
   });
 }
 
-/* (2) Las tarjetas siguen su flujo normal */
+/* (2) Las tarjetas siguen su flujo normal. Antes de navegar se guarda el contexto
+   del producto para que catalogo.html pueda abrir la tarjeta ampliada al instante. */
 function bindProducts(){
   document.querySelectorAll('.product-card').forEach(a=>{
     a.onclick=ev=>{
       ev.stopPropagation();
       const p=products.find(x=>String(x._id)===String(a.dataset.pid));
-      if(p)trackProductView(p);
+      if(p){
+        trackProductView(p);
+        storeProductContext(p);
+      }
       /* Navegación nativa del enlace: catalogo.html?id=<negocio>&pid=<producto> */
     };
   });
@@ -1030,9 +1065,23 @@ function renderCategories(){
   applyCategoryFilter();
 }
 
+/* (3) Modal de categoría: muestra todos los productos de los comercios de esa categoría */
 function openCategory(c){
   $('categoryTitle').textContent=c;
-  $('categoryShops').innerHTML=shops.filter(s=>s.category===c).map(s=>'<a href="negocio.html?id='+encodeURIComponent(shopKey(s))+'" target="_blank" class="category-shop"><img src="'+esc(s.logo)+'" loading="lazy"><span><strong>'+esc(s.name)+'</strong><small>'+esc(c)+'</small></span></a>').join('');
+  const shopIds = new Set();
+  shops.filter(s=>s.category===c).forEach(s=>shopKeys(s).forEach(k=>shopIds.add(String(k))));
+  const shopNameById=buildShopMap();
+  const catProducts = products.filter(p=>p._img && shopIds.has(String(p._bid||'')));
+  if(catProducts.length){
+    $('categoryShops').innerHTML=catProducts.map(p=>{
+      const href=productHref(p);
+      const shopN=p._shop||shopNameById[p._bid]||c;
+      return '<a href="'+href+'" class="category-shop"><img src="'+esc(p._img)+'" loading="lazy"><span><strong>'+esc(p._name)+'</strong><small>'+esc((p._ref?'REF '+p._ref+' · ':'')+shopN)+(p._price?' · '+formatPrice(p._price):'')+'</small></span></a>';
+    }).join('');
+  }else{
+    /* Fallback: si aún no hay productos cargados, mostrar los comercios */
+    $('categoryShops').innerHTML=shops.filter(s=>s.category===c).map(s=>'<a href="negocio.html?id='+encodeURIComponent(shopKey(s))+'" target="_blank" class="category-shop"><img src="'+esc(s.logo)+'" loading="lazy"><span><strong>'+esc(s.name)+'</strong><small>'+esc(c)+'</small></span></a>').join('');
+  }
   $('categoryModal').classList.remove('hidden');
 }
 function bind(){
@@ -1553,7 +1602,20 @@ $('fileInput').onchange=()=>{
 };
 
 bind();
-fetchShops().then(fetchProducts);
+/* (1) Cargar shops y productos en paralelo para que el panel aparezca muy rápido */
+Promise.all([fetchShops(), fetchProducts()]).catch(()=>{});
+
+/* (2) Delegado global: antes de navegar a catalogo.html?pid=... guardar contexto del producto */
+document.addEventListener('click',(ev)=>{
+  const a=ev.target.closest('a[href*="catalogo.html"]');
+  if(!a)return;
+  const href=a.getAttribute('href')||'';
+  const m=href.match(/[?&](?:pid|product_id|producto)=([^&]+)/);
+  if(!m)return;
+  const pid=decodeURIComponent(m[1]);
+  const p=products.find(x=>String(x._id)===String(pid));
+  if(p)storeProductContext(p);
+},true);
 </script>
 <script>
   if ('serviceWorker' in navigator) {
