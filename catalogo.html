@@ -1632,7 +1632,14 @@ alter table shop_products add column if not exists home_service text;
   let activeType = 'all';
   let activeCat = 'all';
   let searchTerm = '';
-  let themeOverride = null;
+  /* El modo claro/oscuro elegido por el usuario se recuerda al volver */
+  let themeOverride = (function () {
+    try {
+      const t = localStorage.getItem('sofy_theme');
+      return (t === 'light' || t === 'dark') ? t : null;
+    } catch (e) { return null; }
+  })();
+  if (themeOverride) document.documentElement.setAttribute('data-theme', themeOverride);
   let heroIndex = 0;
   let heroTimer = null;
   let heroSignature = null;
@@ -2025,6 +2032,8 @@ alter table shop_products add column if not exists home_service text;
   function toggleTheme() {
     const current = document.documentElement.getAttribute('data-theme') || 'dark';
     themeOverride = current === 'dark' ? 'light' : 'dark';
+    /* Se guarda para que al salir y volver siga igual (oscuro ↔ claro) */
+    try { localStorage.setItem('sofy_theme', themeOverride); } catch (e) {}
     applyShopTheme();
   }
   function renderAll() {
