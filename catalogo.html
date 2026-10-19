@@ -482,6 +482,20 @@
        BOTÓN PERFIL DE TIENDA Y SIN TITILACIÓN AL REABRIR
        ============================================================ */
     a.icon-btn { text-decoration: none; }
+    /* (2) Icono de tienda con animación "ring ring" SOLO en el icono */
+    .store-ico { width: 18px; height: 18px; display: block; flex: 0 0 auto; transform-origin: 50% 14%; animation: ringRing 2.8s ease-in-out infinite; }
+    .icon-btn:hover .store-ico { animation-duration: 1.1s; }
+    @keyframes ringRing {
+      0%, 54%, 100% { transform: rotate(0deg); }
+      57% { transform: rotate(-17deg); }
+      60% { transform: rotate(15deg); }
+      63% { transform: rotate(-12deg); }
+      66% { transform: rotate(10deg); }
+      69% { transform: rotate(-7deg); }
+      72% { transform: rotate(5deg); }
+      75% { transform: rotate(-3deg); }
+      79% { transform: rotate(0deg); }
+    }
     .gal-track { position: absolute; inset: 0; display: flex; width: 100%; height: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
     .gal-track::-webkit-scrollbar { display: none; }
     .gal-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; scroll-snap-stop: always; cursor: zoom-in; }
@@ -548,7 +562,7 @@
           <a id="btnBackToShop" href="#" class="back-link">&#8592; Volver al Comercio</a>
           <div class="hdr-tools">
             <button class="icon-btn" id="themeToggleBtn" title="Cambiar tema" aria-label="Cambiar tema" onclick="toggleTheme()">🌙<span class="btn-label">Modo</span></button>
-            <a class="icon-btn" id="storeProfileBtn" href="#" title="Ver el perfil de la tienda" aria-label="Ver el perfil de la tienda">🏪<span class="btn-label">Tienda</span></a>
+            <a class="icon-btn" id="storeProfileBtn" href="#" title="Ver el perfil de la tienda" aria-label="Ver el perfil de la tienda"><svg class="store-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.6h18l1.1 4.5H1.9z"/><path d="M4.6 9.1V19.6h14.8V9.1"/><path d="M9.4 19.6v-5.6h5.2v5.6"/><path d="M7.6 12.4h1.6M14.8 12.4h1.6"/></svg><span class="btn-label">Tienda</span></a>
             <button class="icon-btn" id="adminGearBtn" title="Editar catálogo" aria-label="Editar catálogo" style="display:none" onclick="openPinModal()">⚙️<span class="btn-label">Administrador</span></button>
           </div>
         </div>
@@ -1815,6 +1829,7 @@ alter table shop_products add column if not exists shipping_options text;
     $('newColorName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addColorOption(); } });
     $('newSizeValue').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addSizeOption(); } });
     $('newCarrierName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomCarrier(); } });
+    $('prodType').addEventListener('change', () => updateItemConditionalFields());
     document.addEventListener('keydown', (e) => {
       if ($('imageLightbox').style.display === 'flex') {
         if (e.key === 'Escape') closeLightbox();
@@ -2489,10 +2504,12 @@ alter table shop_products add column if not exists shipping_options text;
     const test = (re) => re.test(txt);
     if (test(/(restaur|comida|cafeter|\bcafe\b|gastro|pizz|hamburg|burger|asader|parrill|food|sushi|marisc|bistro|pollo|broaster|arepa|empanad|taquer|tacos|brunch|almuerzo|fonda|hot ?dog|grill|steak|cevich|kebab|shawarma|crepe|waffle|cocina|catering)/)) return 'restaurante';
     if (test(/(panader|pasteler|reposter|dulcer|helader|postre|donas)/)) return 'panaderia';
+    if (test(/(barber|barberia|corte de cabello|cortes|fade|perfilado|afeit|barba)/)) return 'barberia';
     if (test(/(\bbar\b|\bpub\b|discotec|licorer|cervec|vinos|coctel)/)) return 'bar';
     if (test(/(supermercad|minimercad|colmad|abarrot|bodeg[oó]n|proveedur|deposito|viver|carnicer|pescader|fruteria|fruver|verduler|salsamentar|charcuter|agua|bebida)/)) return 'supermercado';
     if (test(/(farmac|botica|drogueria|naturista|suplement)/)) return 'farmacia';
-    if (test(/(petshop|pet ?shop|mascota|veterinar|canin|felin|agroveterinar)/)) return 'petshop';
+    if (test(/(veterinar|agroveterinar|vet ?clinic|hospital animal|clinica animal)/)) return 'veterinaria';
+    if (test(/(petshop|pet ?shop|mascota|animal|adopt|perr|gat)/)) return 'petshop';
     if (test(/(calzad|zapat|tenis|sneaker)/)) return 'calzado';
     if (test(/(ropa|moda|boutique|textil|uniform|lencer|pijam|sastrer|jean|camiser|infantil|bebe|maternid|deportiv|deporte|gym)/)) return 'moda';
     if (test(/(joyer|bisuter|accesori|relojer|optic|gafas|lentes)/)) return 'joyeria';
@@ -2520,6 +2537,8 @@ alter table shop_products add column if not exists shipping_options text;
     papeleria: { search: 'Buscar artículos, útiles o regalos…', notesLabel: '📝 Observaciones / personalización', notes: 'Ej: personalizar con nombre, empaque de regalo, color azul…', hint: 'Indícanos personalización, colores o presentación del regalo.', prodName: 'Ej: Set escolar 12 piezas', prodDesc: 'Contenido del set, materiales, tamaño y edad recomendada…', cat: 'Ej: Útiles, Oficina, Regalos, Juguetes…', banner: 'Ej: Temporada escolar con 30% off', note: 'Ej: envolver para regalo con lazo rojo…', address: 'Ej: Calle 45 #12-30, sector, edificio/apto, punto de referencia…', review: 'Cuéntanos de la variedad, los precios y la atención…' },
     automotriz: { search: 'Buscar repuestos, llantas o servicios…', notesLabel: '📝 Datos del vehículo / observaciones', notes: 'Ej: Toyota Corolla 2018, motor 1.8, medida 195/65 R15…', hint: 'Indícanos marca, modelo y año del vehículo para asegurar compatibilidad.', prodName: 'Ej: Filtro de aceite original', prodDesc: 'Compatibilidad, marca, referencia y garantía…', cat: 'Ej: Repuestos, Llantas, Lubricantes, Servicios…', banner: 'Ej: Cambio de aceite con 15% off', note: 'Ej: necesito instalación el sábado en la mañana…', address: 'Ej: Calle 45 #12-30, sector, edificio/apto, punto de referencia…', review: 'Cuéntanos de la calidad del repuesto y el servicio técnico…' },
     servicios: { search: 'Buscar servicios disponibles…', notesLabel: '📝 Detalles de tu solicitud', notes: 'Ej: disponibilidad los sábados, el trabajo es en un apartamento, urgencia…', hint: 'Cuéntanos qué necesitas, para cuándo y cualquier detalle importante.', prodName: 'Ej: Asesoría profesional por hora', prodDesc: 'Qué incluye el servicio, duración, alcance y requisitos…', cat: 'Ej: Consultoría, Mantenimiento, Instalación, Asesorías…', banner: 'Ej: Primera consulta gratis este mes', note: 'Ej: agendar para el próximo lunes en la mañana…', address: 'Ej: Calle 45 #12-30, sector, edificio/apto, punto de referencia…', review: 'Cuéntanos de la puntualidad, el profesionalismo y el resultado…' },
+    barberia: { search: 'Buscar cortes, barba o tratamientos…', notesLabel: '📝 Detalles de tu cita / preferencias', notes: 'Ej: corte fade, barba perfilada, cita después de las 5pm, atender a domicilio…', hint: 'Dinos el servicio que quieres, la duración aproximada y el horario que prefieres.', prodName: 'Ej: Corte de cabello + barba', prodDesc: 'Qué incluye el servicio, duración aproximada, si incluye lavado y quién lo atiende…', cat: 'Ej: Cortes, Barba, Tratamientos, Cuidado capilar…', banner: 'Ej: Corte + barba con 20% los miércoles', note: 'Ej: reservar para el sábado a las 10am, llego 10 minutos antes…', address: 'Ej: Calle 45 #12-30, sector, barrio, punto de referencia…', review: 'Cuéntanos del corte, la atención, la limpieza y la puntualidad…' },
+    veterinaria: { search: 'Buscar medicamentos, alimento o citas…', notesLabel: '📝 Datos de tu mascota / observaciones', notes: 'Ej: canino de 8kg, alergias, cita en la mañana, llevar cartilla de vacunas…', hint: 'Dinos especie, peso y edad de tu mascota o el producto exacto para atenderte mejor.', prodName: 'Ej: Vacuna antirrábica perro (dosis)', prodDesc: 'Especie, indicación, presentación, laboratorio y si requiere cita o receta…', cat: 'Ej: Medicamentos, Vacunas, Alimento, Consultas…', banner: 'Ej: Desparasitación con 25% este mes', note: 'Ej: mi mascota es mansa, llamar antes de subir…', address: 'Ej: Calle 45 #12-30, sector, barrio, punto de referencia…', review: 'Cuéntanos de la atención veterinaria, la claridad y los resultados…' },
     retail: { search: 'Buscar productos o servicios…', notesLabel: '📝 Observaciones / preferencias', notes: 'Ej: color preferido, presentación, es para regalo, entrega en la tarde…', hint: 'Cuéntanos cómo lo prefieres; tus observaciones llegan en el pedido.', prodName: 'Ej: Nombre del producto o servicio', prodDesc: 'Detalles, características o información del servicio…', cat: 'Ej: Novedades, Ofertas, Más vendidos…', banner: 'Ej: Promoción especial de la semana', note: 'Ej: entregar después de las 6pm, llamar al llegar…', address: 'Ej: Calle 45 #12-30, sector, edificio/apto, punto de referencia…', review: 'Cuéntanos cómo fue tu experiencia: atención, calidad y entrega…' }
   };
   function bizCopy() { return BIZ_COPY[bizKind()] || BIZ_COPY.retail; }
@@ -2547,6 +2566,14 @@ alter table shop_products add column if not exists shipping_options text;
   function bizVariantProfile() {
     const txt = normTxt((shopData && shopData.category) + ' ' + (shopData && shopData.name));
     const test = (re) => re.test(txt);
+    /* Barbería → servicios, sin variantes */
+    if (test(/(barber|barberia|corte de cabello|fade|perfilado|afeit|barba)/)) {
+      return { colors: false, sizes: false, label: 'barbería', note: 'Tu comercio es una <b>barbería</b>: son <b>servicios</b>, por eso <b>los colores y las tallas no son necesarios</b> y se ocultan automáticamente.' };
+    }
+    /* Veterinaria → colores para accesorios, sin tallas */
+    if (test(/(veterinar|agroveterinar|vet ?clinic|hospital animal|clinica animal)/)) {
+      return { colors: true, sizes: false, label: 'veterinaria', note: 'Tu comercio es una <b>veterinaria</b>: se habilitan los <b>colores</b> (collares, camas, transportadoras). <b>Las tallas no son necesarias</b> para este gremio.' };
+    }
     /* Alimentos, bebidas y proveeduría → sin colores ni tallas */
     if (test(/(restaur|comida|cafeter|\bcafe\b|gastro|pizz|hamburg|burger|asader|parrill|food|panader|pasteler|reposter|helader|sushi|marisc|bistro|pollo|broaster|arepa|empanad|taquer|tacos|brunch|coctel|cervec|jugos|juguer|fruteria|fruver|verduler|postre|donas|grill|steak|pescad|cevich|kebab|shawarma|crepe|waffle|snack|almuerzo|fonda|hot ?dog|\bbar\b|\bpub\b|discotec|licorer|cocina|salsamentar|charcuter|fritanga|picada|supermercad|minimercad|colmad|abarrot|bodeg[oó]n|carnicer|pescader|deposito|agua|bebida|proveedur|catering|dulcer|vinos|farmac|botica|drogueria)/)) {
       return { colors: false, sizes: false, label: 'alimentos, bebidas y proveeduría', note: 'Tu comercio pertenece al gremio de <b>alimentos, bebidas y proveeduría</b>, por eso <b>los campos de colores y tallas no son necesarios</b> y se ocultan automáticamente.' };
@@ -2606,14 +2633,18 @@ alter table shop_products add column if not exists shipping_options text;
   }
   function shopCarrierOptions() {
     /* Une las transportadoras de los productos que están en el carrito.
-       Si ninguno define opciones, usa las del comercio (columna legacy). */
+       Si ninguno define opciones, usa las del comercio (columna legacy).
+       Si el carrito es SOLO servicios → no se ofrecen opciones de envío. */
     const set = [];
+    let hasProduct = false;
     cart.forEach((l) => {
       const p = productById(l.productId);
       if (!p) return;
+      if ((p.item_type || 'producto') !== 'servicio') hasProduct = true;
       parseShipping(p.shipping_options).forEach((s) => { if (s && set.indexOf(s) < 0) set.push(s); });
     });
     if (set.length) return set;
+    if (!hasProduct && cart.length) return [];
     return parseShipping(shopData && shopData.shipping_options);
   }
   function renderCarrierOptions() {
@@ -3135,9 +3166,68 @@ alter table shop_products add column if not exists shipping_options text;
     });
   }
   /* ---------------- Productos / servicios ---------------- */
+  /* (CAMBIO 1) El selector "Tipo de ítem" solo ofrece lo que la tienda maneja:
+     - Tienda solo de productos  → únicamente 🛍️ Producto
+     - Tienda solo de servicios  → únicamente 🛍️ Servicio  (viceversa)
+     - Tienda nueva (sin ítems)  → las dos opciones                            */
+  function shopHasServices() {
+    return productsList.some((p) => (p.item_type || 'producto') === 'servicio');
+  }
+  function shopHasProducts() {
+    return productsList.some((p) => (p.item_type || 'producto') !== 'servicio');
+  }
+  function itemTypeInfo() {
+    const empty = productsList.length === 0;
+    const hasServ = shopHasServices();
+    const hasProd = shopHasProducts();
+    return {
+      empty,
+      onlyProducts: !empty && hasProd && !hasServ,
+      onlyServices: !empty && hasServ && !hasProd
+    };
+  }
+  function defaultItemType() {
+    const info = itemTypeInfo();
+    return info.onlyServices ? 'servicio' : 'producto';
+  }
+  function fillItemTypeSelect(selected) {
+    const info = itemTypeInfo();
+    let sel = selected || defaultItemType();
+    if (info.onlyServices && sel !== 'servicio') sel = 'servicio';
+    if (info.onlyProducts && sel !== 'producto') sel = 'producto';
+    const showProduct = info.empty || !info.onlyServices;
+    const showService = info.empty || !info.onlyProducts;
+    let opts = '';
+    if (showProduct) opts += '<option value="producto">🛍️ Producto</option>';
+    if (showService) opts += '<option value="servicio">🛠️ Servicio</option>';
+    $('prodType').innerHTML = opts;
+    $('prodType').value = sel;
+    const field = $('prodType').closest ? $('prodType').closest('.field') : null;
+    if (field) field.style.display = '';
+    const lbl = field ? field.querySelector('label') : null;
+    if (lbl) {
+      if (!showService) lbl.textContent = 'Tipo de ítem (esta tienda sube productos)';
+      else if (!showProduct) lbl.textContent = 'Tipo de ítem (esta tienda solo da servicios)';
+      else lbl.textContent = 'Tipo de ítem';
+    }
+    updateItemConditionalFields();
+  }
+  /* (CAMBIO 3) Servicio → sin opciones de envío ni inventario.
+     (CAMBIO 5) Restaurante (platos preparados) → sin inventario. */
+  function updateItemConditionalFields() {
+    const typeEl = $('prodType');
+    const isServ = !!typeEl && typeEl.value === 'servicio';
+    const food = isFoodBusiness();
+    const shipField = $('carrierList') ? $('carrierList').closest('.field') : null;
+    const shipTitle = $('productModal') ? $('productModal').querySelector('.sub-title') : null;
+    if (shipField) shipField.style.display = isServ ? 'none' : '';
+    if (shipTitle) shipTitle.style.display = isServ ? 'none' : '';
+    const stockField = $('prodStock') ? $('prodStock').closest('.field') : null;
+    if (stockField) stockField.style.display = (isServ || food) ? 'none' : '';
+  }
   function resetProductForm() {
     $('editProductId').value = '';
-    $('prodType').value = 'producto';
+    fillItemTypeSelect();
     fillCategorySelect('');
     $('prodName').value = '';
     $('prodPrice').value = '';
@@ -3172,7 +3262,7 @@ alter table shop_products add column if not exists shipping_options text;
     $('editProductId').value = p.id;
     $('productModalTitle').textContent = 'Editar ítem';
     $('saveProductBtn').textContent = 'Guardar cambios';
-    $('prodType').value = p.item_type || 'producto';
+    fillItemTypeSelect(p.item_type || 'producto');
     fillCategorySelect(p.category || '');
     $('prodName').value = p.name;
     $('prodPrice').value = p.price;
@@ -3192,11 +3282,14 @@ alter table shop_products add column if not exists shipping_options text;
     const name = $('prodName').value.trim();
     const price = $('prodPrice').value;
     if (!name || price === '') { toast('Nombre y precio son obligatorios', '⚠️'); return; }
+    const itemType = $('prodType').value;
     const stockRaw = $('prodStock').value;
-    const stockVal = stockRaw === '' ? null : Math.max(0, parseInt(stockRaw, 10) || 0);
+    /* (3)(5) Servicio o restaurante → sin inventario; servicio → sin envíos */
+    const hideStock = itemType === 'servicio' || isFoodBusiness();
+    const stockVal = hideStock ? null : (stockRaw === '' ? null : Math.max(0, parseInt(stockRaw, 10) || 0));
     const payload = {
       business_id: shopId,
-      item_type: $('prodType').value,
+      item_type: itemType,
       name,
       category: ($('prodCategory').value || '').trim() || 'General',
       price: parseFloat(price),
@@ -3204,7 +3297,7 @@ alter table shop_products add column if not exists shipping_options text;
       image_url: formImages[0] || '',
       images: JSON.stringify(formImages),
       stock: stockVal,
-      shipping_options: JSON.stringify(selectedCarriers),
+      shipping_options: itemType === 'servicio' ? '[]' : JSON.stringify(selectedCarriers),
       colors: JSON.stringify(formColors),
       sizes: JSON.stringify(formSizes)
     };
