@@ -496,6 +496,32 @@
       75% { transform: rotate(-3deg); }
       79% { transform: rotate(0deg); }
     }
+    /* (1) Tappable del logo/nombre + MODAL DE IDENTIDAD DEL COMERCIO */
+    .brand-tap { cursor: pointer; transition: opacity .18s ease; }
+    .brand-tap:hover { opacity: .85; }
+    .shop-id-modal { max-width: 362px; overflow: hidden; }
+    .shop-id-x { width: 38px; height: 38px; font-size: 1.05rem; animation: idPop .38s .1s cubic-bezier(.2,.9,.3,1.45) both; transition: transform .3s cubic-bezier(.2,.9,.3,1.45), background .2s, color .2s, border-color .2s; }
+    .shop-id-x:hover, .shop-id-x:focus-visible { transform: rotate(90deg) scale(1.08); background: linear-gradient(135deg, var(--primary), var(--primary-bright)); color: #fff; border-color: transparent; outline: none; }
+    .shop-id-body { position: relative; padding: 48px 24px 26px; text-align: center; overflow: hidden; }
+    .shop-id-glow { position: absolute; top: -96px; left: 50%; transform: translateX(-50%); width: 340px; height: 250px; background: radial-gradient(closest-side, color-mix(in srgb, var(--primary) 55%, transparent), transparent 72%); pointer-events: none; }
+    .shop-id-ring { position: relative; width: 120px; height: 120px; margin: 0 auto 15px; border-radius: 50%; padding: 5px; background: linear-gradient(135deg, var(--primary), var(--primary-bright)); box-shadow: 0 18px 42px var(--primary-soft), 0 0 0 7px color-mix(in srgb, var(--primary) 14%, transparent); animation: idPop .5s cubic-bezier(.2,.9,.3,1.35) both; }
+    .shop-id-ring::after { content: ""; position: absolute; inset: -15px; border-radius: 50%; border: 1px dashed color-mix(in srgb, var(--primary) 48%, transparent); animation: idSpin 24s linear infinite; }
+    .shop-id-ring .inner { position: relative; width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: var(--card-2); display: grid; place-items: center; border: 3px solid var(--card); }
+    .shop-id-ring .inner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .shop-id-ring .inner .ph { font-size: 2.8rem; line-height: 1; }
+    .shop-id-kicker { position: relative; font-size: .62rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--primary-bright); margin-bottom: 7px; }
+    .shop-id-name { position: relative; font-size: clamp(1.25rem, 5.4vw, 1.7rem); font-weight: 700; line-height: 1.14; margin: 0; word-break: break-word; overflow-wrap: anywhere; }
+    .shop-id-cat { position: relative; color: var(--muted); font-size: .86rem; margin-top: 7px; overflow-wrap: anywhere; }
+    .shop-id-rev { position: relative; display: inline-flex; align-items: center; gap: 6px; margin-top: 13px; font-size: .8rem; font-weight: 800; color: #f5b301; background: var(--bg-soft); border: 1px solid var(--border); padding: 6px 13px; border-radius: 999px; }
+    .shop-id-rev .muted { color: var(--muted); font-weight: 600; }
+    .shop-id-rule { position: relative; display: flex; align-items: center; justify-content: center; gap: 9px; margin: 19px 0 13px; }
+    .shop-id-rule::before, .shop-id-rule::after { content: ""; height: 1px; width: 58px; background: linear-gradient(90deg, transparent, var(--border-strong)); }
+    .shop-id-rule::after { background: linear-gradient(90deg, var(--border-strong), transparent); }
+    .shop-id-rule span { width: 7px; height: 7px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-bright)); box-shadow: 0 0 0 4px var(--primary-soft); }
+    .shop-id-note { position: relative; font-size: .78rem; color: var(--muted); line-height: 1.55; margin: 0 0 16px; overflow-wrap: anywhere; }
+    .shop-id-go { position: relative; width: 100%; }
+    @keyframes idPop { from { opacity: 0; transform: scale(.55) rotate(-9deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+    @keyframes idSpin { to { transform: rotate(360deg); } }
     .gal-track { position: absolute; inset: 0; display: flex; width: 100%; height: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
     .gal-track::-webkit-scrollbar { display: none; }
     .gal-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; scroll-snap-stop: always; cursor: zoom-in; }
@@ -534,9 +560,9 @@
       <div class="topbar-inner">
         <div class="hdr-row hdr-main">
           <div class="brand">
-            <div id="shopLogoWrap"></div>
+            <div id="shopLogoWrap" class="brand-tap" title="Ver logo y nombre completos" onclick="openShopIdentity()"></div>
             <div>
-              <div class="brand-name" id="shopHeaderName">Cargando…</div>
+              <div class="brand-name brand-tap" id="shopHeaderName" title="Ver logo y nombre completos" onclick="openShopIdentity()">Cargando…</div>
               <div class="brand-cat" id="shopHeaderCategory">Menú &amp; Catálogo</div>
               <div class="rating-badge" id="shopRatingBadge" onclick="scrollToReviews()"></div>
             </div>
@@ -583,8 +609,8 @@
       </div>
       <div class="pills" id="typePills">
         <button class="pill active" data-type="all" onclick="setTypeFilter('all')">✨ Todos</button>
-        <button class="pill" data-type="producto" onclick="setTypeFilter('producto')">🛍️ Productos</button>
-        <button class="pill" data-type="servicio" onclick="setTypeFilter('servicio')">🛠️ Servicios</button>
+        <button class="pill" data-type="producto" style="display:none" onclick="setTypeFilter('producto')">🛍️ Productos</button>
+        <button class="pill" data-type="servicio" style="display:none" onclick="setTypeFilter('servicio')">🛠️ Servicios</button>
       </div>
       <div class="cat-rail" id="categoriesRail"></div>
       <div id="productsContainer"></div>
@@ -1097,6 +1123,23 @@
           <button class="btn btn-ghost" onclick="closeModal('successModal')">Entendido</button>
           <button class="btn btn-primary" id="successRateBtn" style="display:none" onclick="closeModal('successModal'); openReviewModal()">⭐ Calificar</button>
         </div>
+      </div>
+    </div>
+  </div>
+  <!-- (1) MODAL DE IDENTIDAD DEL COMERCIO: logo + nombre completos -->
+  <div class="modal-overlay" id="shopIdentityModal" onclick="if(event.target.id==='shopIdentityModal')closeShopIdentity()">
+    <div class="modal shop-id-modal">
+      <button class="modal-close shop-id-x" onclick="closeShopIdentity()" aria-label="Cerrar">✕</button>
+      <div class="shop-id-body">
+        <div class="shop-id-glow"></div>
+        <div class="shop-id-ring"><div class="inner" id="shopIdLogo"></div></div>
+        <div class="shop-id-kicker">Comercio en Sofy</div>
+        <h3 class="serif shop-id-name" id="shopIdName"></h3>
+        <div class="shop-id-cat" id="shopIdCat"></div>
+        <div class="shop-id-rev" id="shopIdRev"></div>
+        <div class="shop-id-rule"><span></span></div>
+        <p class="shop-id-note" id="shopIdNote">Desliza el catálogo para ver todos los productos y servicios de este comercio.</p>
+        <button class="btn btn-primary shop-id-go" onclick="closeShopIdentity()">🔥 Ver el catálogo</button>
       </div>
     </div>
   </div>
@@ -1914,6 +1957,7 @@ alter table shop_products add column if not exists shipping_options text;
     renderCategoriesRail();
     renderProducts();
     renderReviews();
+    updateTypePills();
     updateCartUI();
   }
   function renderHeader() {
@@ -1940,6 +1984,34 @@ alter table shop_products add column if not exists shipping_options text;
     applyDeliveryAvailability();
     updateAdminGearVisibility();
   }
+  /* ============================================================
+     (1) MODAL DE IDENTIDAD: toca el LOGO o el NOMBRE del comercio
+     y se abre un modal pequeño con el logo grande + nombre completo
+     (sin los "…" del encabezado) y su botón ✕ para cerrarlo.
+     ============================================================ */
+  function openShopIdentity() {
+    if (!shopData) return;
+    const logo = shopData.logo || '';
+    $('shopIdLogo').innerHTML = logo
+      ? `<img src="${esc(logo)}" alt="${esc(shopData.name || 'Logo')}">`
+      : '<span class="ph">🍔</span>';
+    $('shopIdName').textContent = shopData.name || 'Comercio';
+    $('shopIdCat').textContent = shopData.category || 'Menú & Catálogo';
+    const rev = $('shopIdRev');
+    if (reviewsList.length) {
+      const avg = avgRating();
+      rev.innerHTML = `★ ${avg.toFixed(1)} <span class="muted">· ${reviewsList.length} ${reviewsList.length === 1 ? 'reseña' : 'reseñas'}</span>`;
+    } else {
+      rev.innerHTML = `☆ <span class="muted">Este comercio aún no tiene reseñas</span>`;
+    }
+    const n = productsList.length;
+    const c = categoryNames().length;
+    $('shopIdNote').textContent = n
+      ? `${n} ${n === 1 ? 'ítem disponible' : 'ítems disponibles'} en ${c} ${c === 1 ? 'categoría' : 'categorías'}. Desliza el catálogo para verlos todos.`
+      : 'Este comercio aún no publica productos ni servicios. ¡Vuelve pronto!';
+    openModal('shopIdentityModal');
+  }
+  function closeShopIdentity() { closeModal('shopIdentityModal'); }
   /* ============================================================
      HERO / BANNERS
      ============================================================ */
@@ -2053,6 +2125,16 @@ alter table shop_products add column if not exists shipping_options text;
     document.querySelectorAll('#typePills .pill').forEach((b) => b.classList.toggle('active', b.dataset.type === type));
     renderHeader();
     renderProducts();
+  }
+  /* (2) Los botones PRODUCTOS / SERVICIOS solo aparecen cuando
+     la tienda ya tiene algo creado (y por tanto su categoría). */
+  function updateTypePills() {
+    const ready = productsList.length > 0 && categoryNames().length > 0;
+    document.querySelectorAll('#typePills .pill').forEach((b) => {
+      if (b.dataset.type === 'all') { b.style.display = ''; return; }
+      b.style.display = ready ? '' : 'none';
+    });
+    if (!ready && activeType !== 'all') setTypeFilter('all');
   }
   function setCatFilter(name) {
     activeCat = name;
