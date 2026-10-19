@@ -394,7 +394,7 @@ Registra tu página, sube tus productos y servicios, y conecta con millones de c
 <div class="backdrop hidden" id="categoryModal"><section class="modal small"><button class="close" data-close><span data-icon="close"></span></button><p class="eyebrow">Categoria</p><h2 id="categoryTitle"></h2><div class="category-shops" id="categoryShops"></div></section></div>
 <div class="backdrop hidden" id="supportModal"><section class="modal support"><div class="support-head"><span class="support-icon" data-icon="gear"></span><div><p class="eyebrow">Centro de ayuda</p><h3>Soporte Sofy</h3></div><button class="close" data-close><span data-icon="close"></span></button></div><div class="support-body"><div class="support-loader" id="supportLoader"><span></span>Cargando soporte...</div><iframe id="supportFrame" title="Soporte Sofy" allow="clipboard-write; fullscreen"></iframe></div></section></div>
 <div class="backdrop hidden" id="passwordModal"><section class="modal small"><button class="close" data-close><span data-icon="close"></span></button><p class="eyebrow">Acceso propietario</p><h2 id="pwTitle">Administrar negocio</h2><p class="intro" id="pwIntro">Ingresa la contraseña de tu cuenta para administrar tu página de negocio y tu catálogo.</p><form id="passwordForm"><label>Contraseña<input type="password" id="pwInput" autocomplete="current-password" required placeholder="••••••••"></label><p class="error hidden" id="pwError">Contraseña incorrecta. Inténtalo de nuevo.</p><button class="primary submit" type="submit" id="pwSubmit">Verificar y continuar</button></form></section></div>
-<div class="backdrop hidden" id="profileModal"><section class="modal profile"><button class="close" data-close><span data-icon="close"></span></button><div class="profile-head"><img id="pfAvatar" src="" alt="Avatar"><div><span class="pf-avatar-badge" id="pfRole">COMPRADOR</span><h2 id="pfName" style="margin-top:6px;">Usuario</h2><p id="pfEmail">correo@ejemplo.com</p></div><div class="pf-head-actions" id="pfHeadActions"><button class="pf-head-btn hidden" id="pfAdminBtn" type="button" title="Administrar mi negocio"><span data-icon="gearColor"></span>Administrar</button><button class="pf-head-btn hidden" id="pfSupportBtn" type="button" title="Soporte"><span data-icon="help"></span>Soporte</button></div></div><div class="profile-stats" id="pfStats"></div><div id="pfBody"></div><button class="primary submit" id="pfLogout" style="margin-top:22px;">Cerrar sesión</button></section></div>
+<div class="backdrop hidden" id="profileModal"><section class="modal profile"><button class="close" data-close><span data-icon="close"></span></button><div class="profile-head"><img id="pfAvatar" src="" alt="Avatar"><div><span class="pf-avatar-badge" id="pfRole">COMPRADOR</span><h2 id="pfName" style="margin-top:6px;">Usuario</h2><p id="pfEmail">correo@ejemplo.com</p></div><div class="pf-head-actions" id="pfHeadActions"><button class="pf-head-btn hidden" id="pfSupportBtn" type="button" title="Soporte"><span data-icon="help"></span>Soporte</button></div></div><div class="profile-stats" id="pfStats"></div><div id="pfBody"></div><button class="primary submit" id="pfLogout" style="margin-top:22px;">Cerrar sesión</button></section></div>
 <div class="backdrop hidden" id="productsModal"><section class="modal products"><button class="close" id="pmClose"><span data-icon="close"></span></button><p class="eyebrow">Mi catálogo</p><h2 style="font-size:28px">Mis productos</h2><div class="pm-list" id="pmList"></div></section></div>
 <div class="backdrop hidden" id="logoutModal"><section class="modal small" style="text-align:center"><div class="logout-icon"><span data-icon="logout"></span></div><p class="eyebrow" style="margin:0 0 6px">Sesión</p><h2 style="font-size:26px;margin:0 0 10px">¿Cerrar sesión?</h2><p style="color:var(--muted);line-height:1.6;margin:0;font-size:14px">¿Estás seguro de que deseas cerrar sesión? Tendrás que iniciar sesión de nuevo para volver a entrar.</p><div class="logout-actions"><button class="primary submit" id="logoutCancelBtn" type="button">Cancelar</button><button class="primary submit danger" id="logoutConfirmBtn" type="button">Sí, cerrar sesión</button></div></section></div>
 <div class="toast hidden" id="toast"></div>
@@ -1163,21 +1163,8 @@ function closeCreateModal(){
   }
 }
 
-/* (3) Administrar: tras la contraseña se dirige a la tienda en catalogo.html */
+/* (3) Soporte: abre el iframe de soporte */
 let pwAction=null;
-function openAdminFlow(){
-  if(!currentUserProfile){openAuth('register');return}
-  pwAction=async()=>{
-    const bid=await getMyShopId();
-    if(bid)window.location.href='catalogo.html?id='+encodeURIComponent(bid);
-    else showToast('Aun no tienes un comercio registrado.');
-  };
-  $('pwTitle').textContent='Administrar mi negocio';
-  $('pwIntro').textContent='Ingresa la contraseña de tu cuenta para administrar tu página de negocio y tu catálogo.';
-  $('pwInput').value='';$('pwError').classList.add('hidden');
-  closeAll();
-  open('passwordModal');setTimeout(()=>$('pwInput').focus(),150);
-}
 function openSupportFlow(){
   const f=$('supportFrame');
   if(!f.getAttribute('src')){
@@ -1187,7 +1174,6 @@ function openSupportFlow(){
   closeAll();
   open('supportModal');
 }
-if ($('pfAdminBtn')) $('pfAdminBtn').onclick=openAdminFlow;
 if ($('pfSupportBtn')) $('pfSupportBtn').onclick=openSupportFlow;
 $('passwordForm').onsubmit=async e=>{
   e.preventDefault();
@@ -1202,7 +1188,7 @@ $('passwordForm').onsubmit=async e=>{
   if(typeof fn==='function')fn();
 };
 
-/* (1/3) Tiendas del vendedor */
+/* (1/3) Tiendas del vendedor: SOLO devuelve tiendas donde el usuario sea el dueño real */
 async function getMyShops(){
   const uid=currentUserProfile?currentUserProfile.id:null;
   if(!uid)return [];
@@ -1214,12 +1200,14 @@ async function getMyShops(){
   const cached=localStorage.getItem('sofy_my_shop_'+uid);
   if(cached&&cached!=='undefined'&&cached!=='null'){
     const hit=shops.find(s=>shopKeys(s).includes(String(cached)));
-    if(hit&&!mine.some(m=>shopKey(m)===shopKey(hit)))mine.push(hit);
+    /* Solo agregar si el owner_id coincide con el usuario actual */
+    if(hit&&hit.owner_id&&String(hit.owner_id)===String(uid)&&!mine.some(m=>shopKey(m)===shopKey(hit)))mine.push(hit);
     else if(!hit&&!mine.length){
       try{
         let r=await _supabase.from('shops').select('*').eq('business_id',cached).limit(1);
         if((!r.data||!r.data.length))r=await _supabase.from('shops').select('*').eq('id',cached).limit(1);
-        if(r.data&&r.data.length)mine.push(r.data[0]);
+        /* Verificar que el owner_id coincida antes de agregar */
+        if(r.data&&r.data.length&&r.data[0].owner_id&&String(r.data[0].owner_id)===String(uid))mine.push(r.data[0]);
       }catch(e){}
     }
   }
@@ -1508,7 +1496,6 @@ async function openProfileModal(){
   open('profileModal');
 
   const isSeller=(u.role||'comprador')==='vendedor';
-  $('pfAdminBtn').classList.toggle('hidden',!isSeller);
   $('pfSupportBtn').classList.toggle('hidden',!isSeller);
 
   const recents=getRecents();
